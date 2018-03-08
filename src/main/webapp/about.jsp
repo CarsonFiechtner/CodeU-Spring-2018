@@ -66,5 +66,37 @@
       </p>
     </div>
   </div>
+  
+  <div id="container">
+    <div 
+         style="width:75%; margin-left:auto; margin-right:auto; margin-top: 50px;">
+      <h1>About CodeU Team 34</h1>
+      <p>This is Team 34. ...</p>
+
+      <h2>Introduction of Members</h2>
+      <ul>
+      	<li><strong>Volodya Shtenovych -PA: </strong>
+      		Introduction about Volodya...</li>
+
+      	<li><strong>Jiaxin Du:</strong>
+      		I am from China and a student studying Computer Science at University of 
+          California, Irvine. I love traveling and swimming. </li>
+
+      	<li><strong>AJ Phillips: </strong>
+      		I am from Las Cruces, New Mexico. I am 19 and a student at New Mexico 
+          State University, double majoring in electrical engineering and computer 
+          science. In my free time, I like to compete in triathlons and play music.
+        </li>
+
+      	<li><strong>Carson Fiechtner:</strong>
+      		I am a software engineering major at Montana Tech in Butte, MT.</li>
+
+      	<li><strong>Casey Chien:</strong>
+      		I am from California. I am a third year at UC Santa Cruz majoring in 
+          computer science and minoring in linguistics. </li>
+      </ul>
+  	</div>
+  </div>
+  
 </body>
 </html>
