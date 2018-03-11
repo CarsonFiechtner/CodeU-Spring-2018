@@ -65,7 +65,11 @@ public class UserStoreTest {
 
   @Test
   public void testAddUser() {
+<<<<<<< HEAD
     User inputUser = new User(UUID.randomUUID(), "test_username", "test password", Instant.now());
+=======
+    User inputUser = new User(UUID.randomUUID(), "test_username", "password", Instant.now());
+>>>>>>> b292937e0fc8b25f8486045ac93b7605a075e3d2
 
     userStore.addUser(inputUser);
     User resultUser = userStore.getUser("test_username");
