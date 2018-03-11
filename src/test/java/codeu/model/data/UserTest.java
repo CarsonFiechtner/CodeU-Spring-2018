@@ -21,16 +21,18 @@ import org.junit.Test;
 
 public class UserTest {
 
-  @Test
-  public void testCreate() {
-    UUID id = UUID.randomUUID();
-    String name = "test_username";
-    Instant creation = Instant.now();
+@Test
+ public void testCreate() {
+   UUID id = UUID.randomUUID();
+   String name = "test_username";
+   Instant creation = Instant.now();
+   String password = "password";
 
-    User user = new User(id, name, creation);
+   User user = new User(id, name, password, creation);
 
-    Assert.assertEquals(id, user.getId());
-    Assert.assertEquals(name, user.getName());
-    Assert.assertEquals(creation, user.getCreationTime());
+   Assert.assertEquals(id, user.getId());
+   Assert.assertEquals(name, user.getName());
+   Assert.assertEquals(password, user.getPassword());
+   Assert.assertEquals(creation, user.getCreationTime());
   }
 }
