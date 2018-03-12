@@ -5,6 +5,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import codeu.model.store.basic.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -31,5 +32,46 @@ public class RegisterServletTest {
    registerServlet.doGet(mockRequest, mockResponse);
 
    Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
+ }
+
+ @Test
+ public void testDoPost_NewUser() throws IOException, ServletException {
+
+    Mockito.when(mockRequest.getParameter("username")).thenReturn("test username");
+    Mockito.when(mockRequest.getParameter("password")).thenReturn("test password");
+
+    UserStore mockUserStore = Mockito.mock(UserStore.class);
+    Mockito.when(mockUserStore.isUserRegistered("test username")).thenReturn(false);
+    registerServlet.setUserStore(mockUserStore);
+
+    registerServlet.doPost(mockRequest, mockResponse);
+
+    Mockito.verify(mockResponse).sendRedirect("/login");
+ }
+
+ @Test
+ public void testDoPost_BadUsername() throws IOException, ServletException {
+
+    Mockito.when(mockRequest.getParameter("username")).thenReturn("bad @#! username");
+
+    registerServlet.doPost(mockRequest, mockResponse);
+
+    Mockito.verify(mockRequest).setAttribute("error", "Please enter only letters, numbers, and spaces.");
+    Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
+ }
+
+ @Test
+ public void testDoPost_ExistingUser() throws IOException, ServletException {
+
+    Mockito.when(mockRequest.getParameter("username")).thenReturn("test username");
+
+    UserStore mockUserStore = Mockito.mock(UserStore.class);
+    Mockito.when(mockUserStore.isUserRegistered("test username")).thenReturn(true);
+    registerServlet.setUserStore(mockUserStore);
+
+    registerServlet.doPost(mockRequest, mockResponse);
+
+    Mockito.verify(mockRequest).setAttribute("error", "That username is already taken.");
+    Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
  }
 }
