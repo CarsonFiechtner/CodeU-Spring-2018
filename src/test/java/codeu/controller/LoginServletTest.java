@@ -84,9 +84,9 @@ public class LoginServletTest {
     //HttpSession mockSession = Mockito.mock(HttpSession.class);
     //Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
 
-    //User mockUser = Mockito.mock(User.class);
-    //Mockito.when(mockUserStore.getUser("test_username")).thenReturn(mockUser);
-    //Mockito.when(mockUser.getPassword()).thenReturn("valid password");
+    User mockUser = Mockito.mock(User.class);
+    Mockito.when(mockUserStore.getUser("test_username")).thenReturn(mockUser);
+    Mockito.when(mockUser.getPassword()).thenReturn("valid password");
 
     loginServlet.doPost(mockRequest, mockResponse);
 
