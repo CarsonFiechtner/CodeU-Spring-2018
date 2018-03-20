@@ -77,8 +77,11 @@
       <h2>Introduction of Members</h2>
       <ul>
       	<li><strong>Volodya Shtenovych -PA: </strong>
-      		Introduction about Volodya...</li>
-
+          "A jack of many trades" has been in Google since 2011, Volodya works on an internal Machine Learning
+          platform and developed a project management tool for Google in his 20% time. Originally from Ukraine,
+          Volodya graduated from Ivan Franko National University of Lviv in 2009. He lived 4 years in Poland before
+          infiltrating San Francisco bay area. Volodya is more productive in Google Docs than in an IDE.
+          Volodya plays ping pong and pool during work hours and rides road bike on weekends.</li>
       	<li><strong>Jiaxin Du:</strong>
       		I am from China and a student studying Computer Science at University of 
           California, Irvine. I love traveling and swimming. </li>
