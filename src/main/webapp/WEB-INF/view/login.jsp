@@ -43,6 +43,9 @@
     <form action="/login" method="POST">
       <label for="username">Username: </label>
       <input type="text" name="username" id="username">
+      <br>
+      <Label for="password">Password: </label>
+      <input type="text" name="password" id="password">
       <button type="submit">Login</button>
     </form>
   </div>
