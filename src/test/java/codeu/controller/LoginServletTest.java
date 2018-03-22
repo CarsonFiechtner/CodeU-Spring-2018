@@ -68,7 +68,7 @@ public class LoginServletTest {
     Mockito.verify(mockUserStore, Mockito.never()).addUser(Mockito.any(User.class));
 
     Mockito.verify(mockRequest)
-        .setAttribute("error", "That username was not found.");
+        .setAttribute("error", "The username test_username was not found.");
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
   }
 
