@@ -82,8 +82,5 @@ public class LoginServlet extends HttpServlet {
       request.setAttribute("error", "That username was not found.");
       request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
     }
-
-    request.getSession().setAttribute("user", username);
-    response.sendRedirect("/conversations");
   }
 }
