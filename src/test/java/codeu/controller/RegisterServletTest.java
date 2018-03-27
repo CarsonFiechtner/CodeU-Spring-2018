@@ -66,7 +66,7 @@ public class RegisterServletTest {
     Mockito.when(mockRequest.getParameter("username")).thenReturn("test username");
 
     UserStore mockUserStore = Mockito.mock(UserStore.class);
-    Mockito.when(mockUserStore.isUserRegistered("test username")).thenReturn(true);
+    Mockito.when(mockUserStore.isUserRegistered(mockRequest.getParameter("username"))).thenReturn(true);
     registerServlet.setUserStore(mockUserStore);
 
     registerServlet.doPost(mockRequest, mockResponse);
