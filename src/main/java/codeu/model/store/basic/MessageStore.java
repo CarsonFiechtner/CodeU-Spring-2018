@@ -15,10 +15,15 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Message;
+import codeu.model.store.basic.UserStore;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 
 /**
  * Store class that uses in-memory data structures to hold values and automatically loads from and
@@ -66,6 +71,15 @@ public class MessageStore {
   }
 
   /**
+   * Get the number of Messages currently stored
+   *
+   * @return The current number of messages stored
+   */
+  public int getNumMessages() {
+        return messages.size();
+  }
+
+  /**
    * Load a set of randomly-generated Message objects.
    *
    * @return false if an error occurs.
@@ -88,6 +102,37 @@ public class MessageStore {
     persistentStorageAgent.writeThrough(message);
   }
 
+  /** Finds the longest streak of messages */
+  public String longestStreak() {
+    int count = 0;
+    List<UUID> users = new ArrayList<>();
+    Instant day = Instant.now().minus(24, ChronoUnit.HOURS);
+    List<Message> messageTrack = messages;
+
+    while(true){
+      List<UUID> curUsers = new ArrayList<>();
+      //Check for messages in the last 24 hours
+      for (int i = 0; i < messageTrack.size(); i++) {
+	if(messageTrack.get(i).getCreationTime().isAfter(day)){
+	    curUsers.add(messageTrack.get(i).getAuthorId());
+	    messageTrack.remove(i);
+	}
+      }
+      //No one else has a streak
+      if(curUsers.isEmpty()){
+	if(users.isEmpty())
+	    return "0 days - No current streak.";
+	return "" + count + " days - " + UserStore.getInstance().getUser(users.get(0)).getName();
+      }
+      //Some users still have a streak, continue searching
+      else {
+	count++;
+	users = curUsers;
+	day = day.minus(24, ChronoUnit.HOURS);
+      }
+    }
+  }
+
   /** Access the current set of Messages within the given Conversation. */
   public List<Message> getMessagesInConversation(UUID conversationId) {
 
@@ -100,6 +145,20 @@ public class MessageStore {
     }
 
     return messagesInConversation;
+  }
+
+  /** Return the date and time that the newest message was sent */
+  public String getNewestMessage() {
+
+    Instant newMessage = Instant.EPOCH;
+
+    for (Message message : messages) {
+      if (message.getCreationTime().isAfter(newMessage)) {
+          newMessage = message.getCreationTime();
+      }
+    }
+    LocalDateTime ldt = LocalDateTime.ofInstant(newMessage, ZoneId.systemDefault());
+    return("" + ldt.getMonth() + " " + ldt.getDayOfMonth() + ", " + ldt.getYear() + " at " + ldt.getHour() + ":" + ldt.getMinute());
   }
 
   /** Sets the List of Messages stored by this MessageStore. */

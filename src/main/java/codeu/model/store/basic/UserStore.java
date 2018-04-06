@@ -15,10 +15,15 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.User;
+import codeu.model.data.Conversation;
+import codeu.model.data.Message;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.Instant;
+import codeu.model.store.basic.ConversationStore;
+import codeu.model.store.basic.MessageStore;
 
 /**
  * Store class that uses in-memory data structures to hold values and automatically loads from and
@@ -83,6 +88,52 @@ public class UserStore {
     }
     return null;
   }
+
+  /**
+   * Access the newest User object.
+   *
+   * @return The newest User.
+   */
+  public String getNewestUser() {
+    String newName = "";
+    Instant curNewest = Instant.EPOCH;
+    // This approach will be pretty slow if we have many users.
+    for (User user : users) {
+      if (user.getCreationTime().isAfter(curNewest)) {
+        curNewest = user.getCreationTime();
+	newName = user.getName();
+      }
+    }
+    return newName;
+  }
+
+  /**
+   * Access the oldest User object.
+   *
+   * @return The oldest User.
+   */
+  public String getOldestUser() {
+    String oldName = users.get(0).getName();
+    Instant curOldest = users.get(0).getCreationTime();
+    // This approach will be pretty slow if we have many users.
+    for (User user : users) {
+      if (user.getCreationTime().isBefore(curOldest)) {
+        curOldest = user.getCreationTime();
+        oldName = user.getName();
+      }
+    }
+    return oldName;
+  }
+
+  /**
+   * Get the number of Users currently stored
+   *
+   * @return The current number of users stored
+   */
+  public int getNumUsers() {
+        return users.size();
+  }
+
 
   /**
    * Access the User object with the given UUID.

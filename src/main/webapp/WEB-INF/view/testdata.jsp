@@ -1,3 +1,4 @@
+
 <%--
   Copyright 2017 Google Inc.
 
@@ -13,8 +14,14 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
+
+<%@ page import="codeu.model.store.basic.UserStore" %>
+<%@ page import="codeu.model.store.basic.ConversationStore" %>
+<%@ page import="codeu.model.store.basic.MessageStore" %>
+
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Load Test Data</title>
   <link rel="stylesheet" href="/css/main.css">
@@ -34,6 +41,24 @@
   </nav>
 
   <div id="container">
+     <h1>Statistics</h1>
+    <p>This provides an overview of data relevant to our chat app.</p>
+     <% int numUsers = UserStore.getInstance().getNumUsers();
+	int numConversations = ConversationStore.getInstance().getNumConversations();
+	int numMessages = MessageStore.getInstance().getNumMessages();
+	String newUser = UserStore.getInstance().getNewestUser();
+	String oldUser = UserStore.getInstance().getOldestUser();
+	String newMessage = MessageStore.getInstance().getNewestMessage();
+	String streak = MessageStore.getInstance().longestStreak();
+     %>
+	<a>Users: <%= numUsers %></a></br>
+	<a>Conversations: <%= numConversations %></a></br>
+	<a>Messages: <%= numMessages %></a></br>
+	<a>Oldest User: <%= oldUser %></a></br>
+	<a>Newest User: <%= newUser %></a></br>
+	<a>Longest Streak: <%= streak %></a></br>
+	<a>Most Recent Message Sent: <%= newMessage %></a></br>
+
     <h1>Load Test Data</h1>
     <p>This will load a number of users, conversations, and messages for testing
         purposes.</p>
