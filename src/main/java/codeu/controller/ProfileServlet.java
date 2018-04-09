@@ -46,22 +46,20 @@ public class ProfileServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    String requestUrl = request.getRequestURI();
-    String username = requestUrl.substring("/profile/".length());
+  String requestUrl = request.getRequestURI();
+  String username = requestUrl.substring("/profile/".length());
+  System.out.println(username); 
 
 	User user = userStore.getUser(username);
     if (user == null) {
-      // couldn't find user
-      request.setAttribute("error", "Sorry, the user" + username + " not found!");
-      request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
-      return;
+      response.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
 
     /*get messages from the specific user(NOT DONE)*/
     List<Message> userMessages = new ArrayList<>();
 
     request.setAttribute("user", user);
-    request.setAttribute("messages", usermessages);
+    request.setAttribute("messages", userMessages);
     request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
   }
 
