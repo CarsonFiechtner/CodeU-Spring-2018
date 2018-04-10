@@ -15,14 +15,12 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.User;
-import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.time.Instant;
-import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
 
 /**
