@@ -126,23 +126,25 @@ public class MessageStore {
         }
 	thirtyDayStats.add(count);
       }
+      lastStatUpdate = Instant.now();
     }
-    lastStatUpdate = Instant.now();
     //Since there's no guarantee this will be called every day, we must check when the latest messages were sent.
-    if(!untrackedMessages.isEmpty()){
-	int day = 0, count = 0;
-	while(!untrackedMessages.isEmpty()){
-            Instant checkTime = lastStatUpdate.plus(24*(day+1), ChronoUnit.HOURS);
+    if(!untrackedMessages.isEmpty() || Instant.now().minus(24, ChronoUnit.HOURS).isAfter(lastStatUpdate)){
+	int count = 0;
+        Instant checkTime = lastStatUpdate.plus(24, ChronoUnit.HOURS);
+	while(!untrackedMessages.isEmpty() && checkTime.isBefore(Instant.now())){
 	    while(untrackedMessages.get(0).getCreationTime().isBefore(checkTime)){
 		count++;
 		untrackedMessages.remove(0);
 	    }
-	    day++;
 	    thirtyDayStats.add(0, count);
+	    checkTime = checkTime.plus(24, ChronoUnit.HOURS);
 	}
 	//Keep stats limited to 30 days
-	while(thirtyDayStats.size() > 30)
+	while(thirtyDayStats.size() > 30){
 	    thirtyDayStats.remove(thirtyDayStats.size()-1);
+	}
+        lastStatUpdate = Instant.now();
     }
     return thirtyDayStats.toArray(new Integer[thirtyDayStats.size()]);
   }
