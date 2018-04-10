@@ -15,14 +15,16 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Message;
+import codeu.model.store.basic.SortByCreationTime;
 import codeu.model.store.basic.UserStore;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.Collections;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.time.temporal.ChronoUnit;
 
 /**
@@ -63,11 +65,15 @@ public class MessageStore {
 
   /** The in-memory list of Messages. */
   private List<Message> messages;
-
+  private List<Message> untrackedMessages;
+  private Message newestMessage;
+  private List<Integer> thirtyDayStats;
+  private Instant lastStatUpdate;
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private MessageStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
     messages = new ArrayList<>();
+    untrackedMessages = new ArrayList<>();
   }
 
   /**
@@ -99,38 +105,46 @@ public class MessageStore {
   /** Add a new message to the current set of messages known to the application. */
   public void addMessage(Message message) {
     messages.add(message);
+    untrackedMessages.add(message);
+    newestMessage = message;
     persistentStorageAgent.writeThrough(message);
   }
 
-  /** Finds the longest streak of messages */
-  public String longestStreak() {
-    int count = 0;
-    List<UUID> users = new ArrayList<>();
-    Instant day = Instant.now().minus(24, ChronoUnit.HOURS);
-    List<Message> messageTrack = messages;
-
-    while(true){
-      List<UUID> curUsers = new ArrayList<>();
-      //Check for messages in the last 24 hours
-      for (int i = 0; i < messageTrack.size(); i++) {
-	if(messageTrack.get(i).getCreationTime().isAfter(day)){
-	    curUsers.add(messageTrack.get(i).getAuthorId());
-	    messageTrack.remove(i);
-	}
-      }
-      //No one else has a streak
-      if(curUsers.isEmpty()){
-	if(users.isEmpty())
-	    return "0 days - No current streak.";
-	return "" + count + " days - " + UserStore.getInstance().getUser(users.get(0)).getName();
-      }
-      //Some users still have a streak, continue searching
-      else {
-	count++;
-	users = curUsers;
-	day = day.minus(24, ChronoUnit.HOURS);
+  /** Finds the number of messages sent in the last 30 days */
+  public Integer [] activeUserInfo() {
+    if(thirtyDayStats == null){
+      List<Message> messageList = messages;
+      Collections.sort(messageList, new SortByCreationTime());
+      thirtyDayStats = new ArrayList<Integer>();
+      int listPos = 0;
+      for(int i = 0; i < 30; i++){
+	Integer count = 0;
+        Instant checkTime = Instant.now().minus(24*(i+1), ChronoUnit.HOURS);
+        while(listPos < messageList.size() && messageList.get(listPos).getCreationTime().isAfter(checkTime)){
+	  count++;
+	  listPos++;
+        }
+	thirtyDayStats.add(count);
       }
     }
+    lastStatUpdate = Instant.now();
+    //Since there's no guarantee this will be called every day, we must check when the latest messages were sent.
+    if(!untrackedMessages.isEmpty()){
+	int day = 0, count = 0;
+	while(!untrackedMessages.isEmpty()){
+            Instant checkTime = lastStatUpdate.plus(24*(day+1), ChronoUnit.HOURS);
+	    while(untrackedMessages.get(0).getCreationTime().isBefore(checkTime)){
+		count++;
+		untrackedMessages.remove(0);
+	    }
+	    day++;
+	    thirtyDayStats.add(0, count);
+	}
+	//Keep stats limited to 30 days
+	while(thirtyDayStats.size() > 30)
+	    thirtyDayStats.remove(thirtyDayStats.size()-1);
+    }
+    return thirtyDayStats.toArray(new Integer[thirtyDayStats.size()]);
   }
 
   /** Access the current set of Messages within the given Conversation. */
@@ -150,15 +164,19 @@ public class MessageStore {
   /** Return the date and time that the newest message was sent */
   public String getNewestMessage() {
 
-    Instant newMessage = Instant.EPOCH;
+    if(newestMessage == null){
+      Instant newMessageTime = Instant.EPOCH;
 
-    for (Message message : messages) {
-      if (message.getCreationTime().isAfter(newMessage)) {
-          newMessage = message.getCreationTime();
+      for (Message message : messages) {
+        if (message.getCreationTime().isAfter(newMessageTime)) {
+            newestMessage = message;
+	    newMessageTime = message.getCreationTime();
+        }
       }
     }
-    LocalDateTime ldt = LocalDateTime.ofInstant(newMessage, ZoneId.systemDefault());
-    return("" + ldt.getMonth() + " " + ldt.getDayOfMonth() + ", " + ldt.getYear() + " at " + ldt.getHour() + ":" + ldt.getMinute());
+    Date newTime = Date.from(newestMessage.getCreationTime());
+    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    return formatter.format(newTime);
   }
 
   /** Sets the List of Messages stored by this MessageStore. */

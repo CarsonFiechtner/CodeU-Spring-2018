@@ -63,6 +63,9 @@ public class UserStore {
   /** The in-memory list of Users. */
   private List<User> users;
 
+  /** These track the oldest and newest users, respectively */
+  private User oldestUser;
+  private User newestUser;
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private UserStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
@@ -92,37 +95,38 @@ public class UserStore {
   /**
    * Access the newest User object.
    *
-   * @return The newest User.
+   * @return The newest User's name.
    */
   public String getNewestUser() {
-    String newName = "";
-    Instant curNewest = Instant.EPOCH;
-    // This approach will be pretty slow if we have many users.
-    for (User user : users) {
-      if (user.getCreationTime().isAfter(curNewest)) {
-        curNewest = user.getCreationTime();
-	newName = user.getName();
+    if(newestUser == null){
+      Instant testTime = Instant.EPOCH;
+      for (User user : users) {
+        if (user.getCreationTime().isAfter(testTime)) {
+	  testTime = user.getCreationTime();
+	  newestUser = user;
+        }
       }
     }
-    return newName;
+    return newestUser.getName();
   }
 
   /**
    * Access the oldest User object.
    *
-   * @return The oldest User.
+   * @return The oldest User's name.
    */
   public String getOldestUser() {
-    String oldName = users.get(0).getName();
-    Instant curOldest = users.get(0).getCreationTime();
-    // This approach will be pretty slow if we have many users.
-    for (User user : users) {
-      if (user.getCreationTime().isBefore(curOldest)) {
-        curOldest = user.getCreationTime();
-        oldName = user.getName();
+    //This likely won't work if the oldest user is removed, but because we don't have that implemented yet, this works for now
+    if(oldestUser == null){
+      Instant testTime = Instant.now();
+      for (User user : users) {
+        if (user.getCreationTime().isBefore(testTime)) {
+	  testTime = user.getCreationTime();
+          oldestUser = user;
+        }
       }
     }
-    return oldName;
+    return oldestUser.getName();
   }
 
   /**
@@ -152,6 +156,7 @@ public class UserStore {
   /** Add a new user to the current set of users known to the application. */
   public void addUser(User user) {
     users.add(user);
+    newestUser = user;
     persistentStorageAgent.writeThrough(user);
   }
 
