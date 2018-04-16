@@ -59,14 +59,17 @@ public class ProfileServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    
-    String requestUrl = request.getRequestURI();
-    String username = requestUrl.substring("/profile/".length());
-    //System.out.println(username); 
-    
+
+    String username = (String) request.getSession().getAttribute("user");
+
+    if(username == null) {
+      response.sendRedirect("/register");
+      return;
+    }
 	  
     User user = userStore.getUser(username);
     if (user == null) {
+      // if user is not found, send a 404 code
       response.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
 
