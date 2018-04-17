@@ -20,16 +20,19 @@
   	<h1><% if(request.getSession().getAttribute("user") != null){ %>
       <a><%= request.getSession().getAttribute("user") %>'s Profile Page</a></h1>
       <hr>
-      <a><h2>About <%= request.getSession().getAttribute("user") %></h2></a>
+      <a>
+      	<h3>About <%= request.getSession().getAttribute("user") %></h3>
+      	<p style="font-size:16px"><%= request.getAttribute("aboutMe")%></p>
+      </a>
       <h3>Edit your About Me (only you can see this)<h3>
       <form action="/profile" method="POST">
-        <label for="description"></label>
-        <textarea name="description" placeholder="Write something about yourself" cols="96" rows="6"></textarea>
+        <label for="aboutMe"></label>
+        <textarea name="aboutMe" font-size="14px" placeholder="Write something about yourself" cols="96" rows="6"></textarea>
         <hr style="height:0px; visibility:hidden;" />
         <button type="submit">Submit</button>
       </form>
       <hr>
-      <a><h2><%= request.getSession().getAttribute("user") %>'s Sent Messages</h2></a>
+      <a><h3><%= request.getSession().getAttribute("user") %>'s Sent Messages</h3></a>
     <% } else{ %>
       <h1>You must login to view this page.</h1>
     <% } %>

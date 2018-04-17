@@ -112,16 +112,9 @@ public class ProfileServlet extends HttpServlet {
       return;
     }
 
-    String requestUrl = request.getRequestURI();
-    String username = requestUrl.substring("/profile/".length());
-    User user = userStore.getUser(username);
+    User user = userStore.getUser(currentUser);
     user.setAboutMe((String) request.getParameter("aboutMe"));
-    
-    if (currentUser.equals(username)){
-      String newAboutMe = Jsoup.clean("aboutMe", Whitelist.none());
-      user.setAboutMe(newAboutMe);
-    }
 
-    response.sendRedirect(requestUrl);
+    response.sendRedirect("/profile");
   }
 }
