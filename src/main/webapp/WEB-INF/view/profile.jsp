@@ -27,7 +27,7 @@
       <h3>Edit your About Me (only you can see this)<h3>
       <form action="/profile" method="POST">
         <label for="aboutMe"></label>
-        <textarea name="aboutMe" font-size="14px" placeholder="Write something about yourself" cols="96" rows="6"></textarea>
+        <textarea name="aboutMe" style="font-size:16px" placeholder="Write something about yourself" cols="96" rows="6"></textarea>
         <hr style="height:0px; visibility:hidden;" />
         <button type="submit">Submit</button>
       </form>
