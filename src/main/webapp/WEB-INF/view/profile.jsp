@@ -1,8 +1,6 @@
 <%@page import="java.util.List" %>
 <%@ page import="codeu.model.data.Message" %>
 
-<% List<Message> messages = (List<Message>) request.getAttribute("authorMessages"); %>
-
 <! DOCTYPE html>
 </html>
   <head>
@@ -32,15 +30,20 @@
       <h3>Edit your About Me (only you can see this)<h3>
       <form action="/profile" method="POST">
         <label for="aboutMe"></label>
-        <textarea name="aboutMe" style="font-size:16px" placeholder="Write something about yourself" cols="96" rows="6"></textarea>
+        <textarea name="aboutMe" style="font-size:16px" placeholder="Write something about yourself" cols="72" rows="6"></textarea>
         <hr style="height:0px; visibility:hidden;" />
         <button type="submit">Submit</button>
       </form>
       <hr>
       <a><h3><%= request.getSession().getAttribute("user") %>'s Sent Messages</h3></a>
-      <% if(messages == null | messages.size() == 0){ %>
-      <p>no messages</p>
-      <% } %>
+      <% List<Message> messages = (List<Message>) request.getAttribute("authorMessages");
+      if(messages == null | messages.size() == 0){ %>
+        <p>You have not sent any messages.</p>
+      <% } else { %>
+        <% for(Message message: messages) { %>
+          <p><li><b><%= message.getCreationTime() %>:</b> <%= message.getContent()%></li></p>
+        <% } %>
+      <% } %>  
     <% } else{ %>
       <h1>You must login to view this page.</h1>
     <% } %>
