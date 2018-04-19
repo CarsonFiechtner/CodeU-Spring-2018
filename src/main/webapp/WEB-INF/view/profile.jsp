@@ -1,3 +1,8 @@
+<%@page import="java.util.List" %>
+<%@ page import="codeu.model.data.Message" %>
+
+<% List<Message> messages = (List<Message>) request.getAttribute("authorMessages"); %>
+
 <! DOCTYPE html>
 </html>
   <head>
@@ -33,6 +38,9 @@
       </form>
       <hr>
       <a><h3><%= request.getSession().getAttribute("user") %>'s Sent Messages</h3></a>
+      <% if(messages == null | messages.size() == 0){ %>
+      <p>no messages</p>
+      <% } %>
     <% } else{ %>
       <h1>You must login to view this page.</h1>
     <% } %>
