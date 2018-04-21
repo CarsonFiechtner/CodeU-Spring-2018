@@ -53,6 +53,12 @@ public class ConversationStoreTest {
   }
 
   @Test
+  public void testNumConversations() {
+    int count = conversationStore.getNumConversations();
+    Assert.assertEquals(count, 1);
+  }
+
+  @Test
   public void testIsTitleTaken_false() {
     boolean isTitleTaken = conversationStore.isTitleTaken("unfound_title");
 

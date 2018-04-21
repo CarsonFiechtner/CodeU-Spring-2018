@@ -61,6 +61,20 @@ public class MessageStoreTest {
     assertEquals(MESSAGE_TWO, resultMessages.get(1));
   }
 
+   @Test
+  public void testNumMessages() {
+    Assert.assertEquals(messageStore.getNumMessages(), 3);
+  }
+
+  @Test
+  public void testMessageData() {
+    Integer [] test = new Integer[30];
+    for(int i = 0; i < 30; i++){
+	test[i] = 0;
+    }
+    Assert.assertEquals(messageStore.activeUserInfo(), test);
+  }
+
   @Test
   public void testAddMessage() {
     UUID inputConversationId = UUID.randomUUID();
@@ -75,6 +89,7 @@ public class MessageStoreTest {
     messageStore.addMessage(inputMessage);
     Message resultMessage = messageStore.getMessagesInConversation(inputConversationId).get(0);
 
+    assertEquals(messageStore.getNewestMessage(), inputMessage);
     assertEquals(inputMessage, resultMessage);
     Mockito.verify(mockPersistentStorageAgent).writeThrough(inputMessage);
   }

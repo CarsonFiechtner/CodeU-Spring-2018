@@ -15,13 +15,12 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Message;
-import codeu.model.store.basic.SortByCreationTime;
 import codeu.model.store.basic.UserStore;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.Collections;
+import java.util.Comparator;
 import java.time.Instant;
 import java.util.Date;
 import java.text.SimpleDateFormat;
@@ -114,7 +113,17 @@ public class MessageStore {
   public Integer [] activeUserInfo() {
     if(thirtyDayStats == null){
       List<Message> messageList = messages;
-      Collections.sort(messageList, new SortByCreationTime());
+
+      messageList.sort(new Comparator<Message>() {
+    	@Override
+    	public int compare(Message m1, Message m2) {
+	      boolean after = m1.getCreationTime().isAfter(m2.getCreationTime());
+              if(after)
+                  return -1;
+              return 1;
+        }
+      });
+
       thirtyDayStats = new ArrayList<Integer>();
       int listPos = 0;
       for(int i = 0; i < 30; i++){
@@ -164,7 +173,7 @@ public class MessageStore {
   }
 
   /** Return the date and time that the newest message was sent */
-  public String getNewestMessage() {
+  public Message getNewestMessage() {
 
     if(newestMessage == null){
       Instant newMessageTime = Instant.EPOCH;
@@ -176,9 +185,7 @@ public class MessageStore {
         }
       }
     }
-    Date newTime = Date.from(newestMessage.getCreationTime());
-    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-    return formatter.format(newTime);
+    return newestMessage;
   }
 
   /** Sets the List of Messages stored by this MessageStore. */

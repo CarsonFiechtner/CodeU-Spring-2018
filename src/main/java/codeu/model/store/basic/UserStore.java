@@ -95,7 +95,7 @@ public class UserStore {
    *
    * @return The newest User's name.
    */
-  public String getNewestUser() {
+  public User getNewestUser() {
     if(newestUser == null){
       Instant testTime = Instant.EPOCH;
       for (User user : users) {
@@ -105,7 +105,7 @@ public class UserStore {
         }
       }
     }
-    return newestUser.getName();
+    return newestUser;
   }
 
   /**
@@ -113,7 +113,7 @@ public class UserStore {
    *
    * @return The oldest User's name.
    */
-  public String getOldestUser() {
+  public User getOldestUser() {
     //This likely won't work if the oldest user is removed, but because we don't have that implemented yet, this works for now
     if(oldestUser == null){
       Instant testTime = Instant.now();
@@ -124,7 +124,7 @@ public class UserStore {
         }
       }
     }
-    return oldestUser.getName();
+    return oldestUser;
   }
 
   /**

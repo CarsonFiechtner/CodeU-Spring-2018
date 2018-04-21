@@ -18,7 +18,10 @@
 <%@ page import="codeu.model.store.basic.UserStore" %>
 <%@ page import="codeu.model.store.basic.ConversationStore" %>
 <%@ page import="codeu.model.store.basic.MessageStore" %>
-
+<%@ page import="codeu.model.data.Message" %>
+<%@ page import="codeu.model.data.User" %>
+<%@ page contentType="text/html" import="java.util.*" %>
+<%@ page contentType="text/html" import="java.text.*" %>
 <!DOCTYPE html>
 <html>
 
@@ -46,16 +49,19 @@
      <% int numUsers = UserStore.getInstance().getNumUsers();
 	int numConversations = ConversationStore.getInstance().getNumConversations();
 	int numMessages = MessageStore.getInstance().getNumMessages();
-	String newUser = UserStore.getInstance().getNewestUser();
-	String oldUser = UserStore.getInstance().getOldestUser();
-	String newMessage = MessageStore.getInstance().getNewestMessage();
+	String newUser = UserStore.getInstance().getNewestUser().getName();
+	String oldUser = UserStore.getInstance().getOldestUser().getName();
+	Message newMessage = MessageStore.getInstance().getNewestMessage();
+	Date newTime = Date.from(newMessage.getCreationTime());
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String newMessageTime = formatter.format(newTime);
      %>
 	<a>Users: <%= numUsers %></a></br>
 	<a>Conversations: <%= numConversations %></a></br>
 	<a>Messages: <%= numMessages %></a></br>
 	<a>Oldest User: <%= oldUser %></a></br>
 	<a>Newest User: <%= newUser %></a></br>
-	<a>Most Recent Message Sent: <%= newMessage %></a></br>
+	<a>Most Recent Message Sent: <%= newMessageTime %></a></br>
 
   </div>
 
