@@ -67,7 +67,22 @@ public class TestDataServletTest {
 
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
   }
+  
+  @Test
+  public void testDoPost_Confirm() throws IOException, ServletException {
+    Mockito.when(mockRequest.getParameter("source")).thenReturn("Romeo and Juliet");
+    Mockito.when(mockRequest.getParameter("numMess")).thenReturn("10");
+    Mockito.when(mockRequest.getParameter("numUsers")).thenReturn("3");
+    Mockito.when(mockRequest.getParameter("confirm")).thenReturn("confirm");
 
+    testDataServlet.doPost(mockRequest, mockResponse);
+
+    Mockito.verify(mockUserStore).loadTestData(3,10,"Romeo and Juliet");
+    Mockito.verify(mockConversationStore).loadTestData(3,10,"Romeo and Juliet");
+    Mockito.verify(mockMessageStore).loadTestData(3,10,"Romeo and Juliet");
+    Mockito.verify(mockResponse).sendRedirect("/");
+  }
+ /*
   @Test
   public void testDoPost_Confirm() throws IOException, ServletException {
     Mockito.when(mockRequest.getParameter("confirm")).thenReturn("confirm");
@@ -91,5 +106,5 @@ public class TestDataServletTest {
     Mockito.verify(mockConversationStore, Mockito.never()).loadTestData();
     Mockito.verify(mockMessageStore, Mockito.never()).loadTestData();
     Mockito.verify(mockResponse).sendRedirect("/");
-  }
+  }*/
 }

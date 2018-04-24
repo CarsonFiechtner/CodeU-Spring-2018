@@ -54,21 +54,28 @@ public class DefaultDataStore {
    */
   private int DEFAULT_MESSAGE_COUNT = 100;
 
-  private static DefaultDataStore instance = new DefaultDataStore();
+//  private static DefaultDataStore instance = new DefaultDataStore(numU,numC,text);
 
-  public static DefaultDataStore getInstance() {
+  public static DefaultDataStore getInstance(int numU, int numM, String text) {
+	DefaultDataStore instance = new DefaultDataStore(numU,numM,text);
     return instance;
   }
 
   private List<User> users;
   private List<Conversation> conversations;
   private List<Message> messages;
+  private int user_count;
+  private int message_count;
+  private String source; 
 
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
-  private DefaultDataStore() {
+  private DefaultDataStore(int numU, int numM, String text) {
     users = new ArrayList<>();
     conversations = new ArrayList<>();
     messages = new ArrayList<>();
+    user_count = numU;
+    message_count = numM;
+    source = text;
 
     if (USE_DEFAULT_DATA) {
       addRandomUsers();
@@ -98,7 +105,7 @@ public class DefaultDataStore {
     List<String> randomUsernames = getRandomUsernames();
     Collections.shuffle(randomUsernames);
 
-    for (int i = 0; i < DEFAULT_USER_COUNT; i++) {
+    for (int i = 0; i < user_count; i++) {
       User user = new User(UUID.randomUUID(), randomUsernames.get(i), BCrypt.hashpw("password", BCrypt.gensalt()), Instant.now());
       PersistentStorageAgent.getInstance().writeThrough(user);
       users.add(user);
@@ -106,9 +113,9 @@ public class DefaultDataStore {
   }
 
   private void addRandomConversations() {
-    for (int i = 1; i <= DEFAULT_CONVERSATION_COUNT; i++) {
+    for (int i = 1; i <= 1; i++) {
       User user = getRandomElement(users);
-      String title = "Conversation_" + i;
+      String title = "Test_Conversation";
       Conversation conversation =
           new Conversation(UUID.randomUUID(), user.getId(), title, Instant.now());
       PersistentStorageAgent.getInstance().writeThrough(conversation);
@@ -117,7 +124,7 @@ public class DefaultDataStore {
   }
 
   private void addRandomMessages() {
-    for (int i = 0; i < DEFAULT_MESSAGE_COUNT; i++) {
+    for (int i = 0; i < message_count; i++) {
       Conversation conversation = getRandomElement(conversations);
       User author = getRandomElement(users);
       String content = getRandomMessageContent();

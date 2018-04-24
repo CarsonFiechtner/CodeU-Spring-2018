@@ -70,10 +70,10 @@ public class MessageStore {
    *
    * @return false if an error occurs.
    */
-  public boolean loadTestData() {
+  public boolean loadTestData(int numU,int numM,String text) {
     boolean loaded = false;
     try {
-      messages.addAll(DefaultDataStore.getInstance().getAllMessages());
+      messages.addAll(DefaultDataStore.getInstance(numU,numM,text).getAllMessages());
       loaded = true;
     } catch (Exception e) {
       loaded = false;

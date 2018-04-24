@@ -81,7 +81,7 @@ public class TestDataServlet extends HttpServlet {
   /**
    * This function fires when a user submits the testdata form. It loads test data if the user
    * clicked the confirm button.
-   */
+   *
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
@@ -91,6 +91,27 @@ public class TestDataServlet extends HttpServlet {
       userStore.loadTestData();
       conversationStore.loadTestData();
       messageStore.loadTestData();
+    }
+
+    response.sendRedirect("/");
+  }
+  
+  **
+   * This function fires when a user submits the testdata form. It loads test data if the user
+   * clicked the confirm button.
+   */
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws IOException, ServletException {
+    String text = request.getParameter("source");
+    int numM = Integer.parseInt(request.getParameter("numMess"));
+    int numU = Integer.parseInt(request.getParameter("numUsers"));
+    String confirmButton = request.getParameter("confirm");
+
+    if (confirmButton != null) {
+      userStore.loadTestData(numU,numM,text);
+      conversationStore.loadTestData(numU,numM,text);
+      messageStore.loadTestData(numU,numM,text);
     }
 
     response.sendRedirect("/");
