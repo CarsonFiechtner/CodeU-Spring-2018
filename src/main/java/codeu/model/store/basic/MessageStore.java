@@ -89,10 +89,10 @@ public class MessageStore {
    *
    * @return false if an error occurs.
    */
-  public boolean loadTestData() {
+  public boolean loadTestData(int numMessages) {
     boolean loaded = false;
     try {
-      messages.addAll(DefaultDataStore.getInstance().getAllMessages());
+      messages.addAll(DefaultDataStore.getInstance().getSpecificMessages(numMessages));
       loaded = true;
     } catch (Exception e) {
       loaded = false;

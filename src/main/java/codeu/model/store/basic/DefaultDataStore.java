@@ -85,12 +85,42 @@ public class DefaultDataStore {
     return users;
   }
 
+  public List<User> getSpecificUsers(int numUsers) {
+    List<User> limitedUsers;
+    if(numUsers < 0 || numUsers > users.size() -1)
+	throw new IllegalArgumentException("Illegal Argument");
+    for(int i = 0; i < numUsers; i++){
+	limitedUsers.add(users.get(i));
+    }
+    return limitedUsers;
+  }
+
   public List<Conversation> getAllConversations() {
     return conversations;
   }
 
+  public List<Conversation> getSpecificConvos(int numConvos) {
+    List<Conversation> limitedConvos;
+    if(numConvos < 0 || numConvos > conversations.size() -1)
+        throw new IllegalArgumentException("Illegal Argument");
+    for(int i = 0; i < numConvos; i++){
+        limitedConvos.add(conversations.get(i));
+    }
+    return limitedUsers;
+  }
+
   public List<Message> getAllMessages() {
     return messages;
+  }
+
+  public List<Message> getSpecificMessages(int numMessages) {
+    List<Message> limitedMessages;
+    if(numMessages < 0 || numMessages > messages.size() -1)
+        throw new IllegalArgumentException("Illegal Argument");
+    for(int i = 0; i < numMessages; i++){
+        limitedMessages.add(messages.get(i));
+    }
+    return limitedMessages;
   }
 
   private void addRandomUsers() {

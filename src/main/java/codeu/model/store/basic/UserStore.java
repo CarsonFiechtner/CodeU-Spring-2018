@@ -71,8 +71,8 @@ public class UserStore {
   }
 
   /** Load a set of randomly-generated Message objects. */
-  public void loadTestData() {
-    users.addAll(DefaultDataStore.getInstance().getAllUsers());
+  public void loadTestData(int numUsers) {
+    users.addAll(DefaultDataStore.getInstance().getSpecificUsers(numUsers));
   }
 
   /**

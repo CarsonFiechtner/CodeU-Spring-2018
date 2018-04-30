@@ -86,11 +86,14 @@ public class TestDataServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
     String confirmButton = request.getParameter("confirm");
+    int numUsers = request.getParameter("numUsers");
+    int numConvos = request.getParameter("numConvos");
+    int numMessages = request.getParameter("numMessages");
 
     if (confirmButton != null) {
-      userStore.loadTestData();
-      conversationStore.loadTestData();
-      messageStore.loadTestData();
+      userStore.loadTestData(numUsers);
+      conversationStore.loadTestData(numConvos);
+      messageStore.loadTestData(numMessages);
     }
 
     response.sendRedirect("/");
