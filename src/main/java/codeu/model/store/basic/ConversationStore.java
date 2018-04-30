@@ -64,6 +64,16 @@ public class ConversationStore {
     conversations = new ArrayList<>();
   }
 
+
+  /**
+   * Get the number of Conversations currently stored
+   *
+   * @return The current number of conversations stored
+   */
+  public int getNumConversations() {
+        return conversations.size();
+  }
+
   /**
    * Load a set of randomly-generated Conversation objects.
    *

@@ -1,3 +1,4 @@
+
 <%--
   Copyright 2017 Google Inc.
 
@@ -13,8 +14,17 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
+
+<%@ page import="codeu.model.store.basic.UserStore" %>
+<%@ page import="codeu.model.store.basic.ConversationStore" %>
+<%@ page import="codeu.model.store.basic.MessageStore" %>
+<%@ page import="codeu.model.data.Message" %>
+<%@ page import="codeu.model.data.User" %>
+<%@ page contentType="text/html" import="java.util.*" %>
+<%@ page contentType="text/html" import="java.text.*" %>
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Load Test Data</title>
   <link rel="stylesheet" href="/css/main.css">
@@ -34,7 +44,66 @@
   </nav>
 
   <div id="container">
-    <h1>Load Test Data</h1>
+     <h1>Statistics</h1>
+    <p>This provides an overview of data relevant to our chat app.</p>
+     <% int numUsers = UserStore.getInstance().getNumUsers();
+	int numConversations = ConversationStore.getInstance().getNumConversations();
+	int numMessages = MessageStore.getInstance().getNumMessages();
+	String newUser = UserStore.getInstance().getNewestUser().getName();
+	String oldUser = UserStore.getInstance().getOldestUser().getName();
+	Message newMessage = MessageStore.getInstance().getNewestMessage();
+	Date newTime = Date.from(newMessage.getCreationTime());
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String newMessageTime = formatter.format(newTime);
+     %>
+	<a>Users: <%= numUsers %></a></br>
+	<a>Conversations: <%= numConversations %></a></br>
+	<a>Messages: <%= numMessages %></a></br>
+	<a>Oldest User: <%= oldUser %></a></br>
+	<a>Newest User: <%= newUser %></a></br>
+	<a>Most Recent Message Sent: <%= newMessageTime %></a></br>
+
+  </div>
+
+  <div id="messageChart" style="display:block; margin:0 auto; width:450px; height:250px"></div>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['line']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+
+      var data = new google.visualization.DataTable();
+      data.addColumn('number', 'Day');
+      data.addColumn('number', 'Messages');
+
+      <% Integer [] activeUsers = MessageStore.getInstance().activeUserInfo(); %>
+
+      <% for(int i = 0; i < 30; i++){ %>
+	data.addRow([<%= i %>, <%= activeUsers[i] %>]);
+      <% } %>
+	
+      var options = {
+        chart: {
+          title: 'Number of Messages Sent in the Last 30 Days',
+        },
+        width: 450,
+        height: 250,
+	vAxis: {
+          title: 'Messages'
+        },
+	legend: {position: 'none'}
+      };
+
+      var chart = new google.charts.Line(document.getElementById('messageChart'));
+
+      chart.draw(data, google.charts.Line.convertOptions(options));
+    }
+  </script>
+
+  <div id="container">
+	<h1>Load Test Data</h1>
     <p>This will load a number of users, conversations, and messages for testing
         purposes.</p>
     <form action="/testdata" method="POST">
