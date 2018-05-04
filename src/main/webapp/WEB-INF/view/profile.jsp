@@ -1,4 +1,7 @@
-<! DOCTYPE html>
+<%@ page import="java.util.List" %>
+<%@ page import="codeu.model.data" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<!DOCTYPE html>
 </html>
   <head>
   	<title>Profile</title>
@@ -30,6 +33,19 @@
       </form>
       <hr>
       <a><h2><%= request.getSession().getAttribute("user") %>'s Sent Messages</h2></a>
+      <div id="chat">
+        <ul><%
+          List<Message> messages = (List<Message>)request.getAttribute("messages");
+          for(Message message: messages){
+              Instant time = message.getCreationTime();
+              DateTimeFormatter timFormat = DataTimeFormatter.ofPattern("EEE mm/dd/yyyy HH:mm:ss").withZone(ZoneId.systemDefault());
+              String timeS = timeFormat.format(time);
+          %>
+              <li><strong><%= timeS %>:</strong><%= message.getContent() %></li>
+        <%}%>
+        </ul>
+      </div>
+          
     <% } else{ %>
       <h1>You must login to view this page.</h1>
     <% } %>
