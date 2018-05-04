@@ -92,7 +92,7 @@ public class MessageStore {
   public boolean loadTestData(int numMessages) {
     boolean loaded = false;
     try {
-      messages.addAll(DefaultDataStore.getInstance().getSpecificMessages(numMessages));
+      messages.addAll(DefaultDataStore.getInstance().getNewMessages(numMessages));
       loaded = true;
     } catch (Exception e) {
       loaded = false;

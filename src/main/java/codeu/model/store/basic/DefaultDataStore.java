@@ -34,7 +34,7 @@ import org.mindrot.jbcrypt.*;
 public class DefaultDataStore {
 
   /** Set this to true to use generated default data. */
-  private boolean USE_DEFAULT_DATA = true;
+  private boolean USE_DEFAULT_DATA = false;
 
   /**
    * Default user count. Only used if USE_DEFAULT_DATA is true. Make sure this is <= the number of
@@ -85,42 +85,60 @@ public class DefaultDataStore {
     return users;
   }
 
-  public List<User> getSpecificUsers(int numUsers) {
-    List<User> limitedUsers;
-    if(numUsers < 0 || numUsers > users.size() -1)
-	throw new IllegalArgumentException("Illegal Argument");
-    for(int i = 0; i < numUsers; i++){
-	limitedUsers.add(users.get(i));
+  public List<User> getNewUsers(int numUsers) {
+    if(users.size()-numUsers < 0)
+	throw new IllegalArgumentException();
+
+    List<User> newUsers = new ArrayList<>(numUsers);
+    for(int i = users.size() - numUsers; i < users.size(); i++){
+	newUsers.add(users.get(i));
     }
-    return limitedUsers;
+    return newUsers;
   }
 
   public List<Conversation> getAllConversations() {
     return conversations;
   }
 
-  public List<Conversation> getSpecificConvos(int numConvos) {
-    List<Conversation> limitedConvos;
-    if(numConvos < 0 || numConvos > conversations.size() -1)
+  public Conversation getLastConversation() {
+    return conversations.get(conversations.size()-1);
+  }
+
+  public void createNewConvo(int numUsers, int numMessages) {
+    if(numUsers < 0 || numMessages < 0)
         throw new IllegalArgumentException("Illegal Argument");
-    for(int i = 0; i < numConvos; i++){
-        limitedConvos.add(conversations.get(i));
+    User [] newUsers = new User[numUsers];
+    Message [] newMessages = new Message[numMessages];
+
+    List<String> randomUsernames = getRandomUsernames();
+    Collections.shuffle(randomUsernames);
+
+    for (int i = 0; i < numUsers; i++) {
+      User user = new User(UUID.randomUUID(), randomUsernames.get(i), BCrypt.hashpw("password", BCrypt.gensalt()), Instant.now());
+      PersistentStorageAgent.getInstance().writeThrough(user);
+      users.add(user);
+      newUsers[i] = user;
     }
-    return limitedUsers;
+
+    Conversation conversation =
+          new Conversation(UUID.randomUUID(), newUsers[0].getId(), "TESTING__" + UUID.randomUUID().toString(), Instant.now());
+      PersistentStorageAgent.getInstance().writeThrough(conversation);
+      conversations.add(conversation);
+
+      for (int i = 0; i < numMessages; i++) {
+      User author = newUsers[i % numUsers];
+      String content = getRandomMessageContent();
+
+      Message message =
+          new Message(
+              UUID.randomUUID(), conversation.getId(), author.getId(), content, Instant.now());
+      PersistentStorageAgent.getInstance().writeThrough(message);
+      messages.add(message);
+    }
   }
 
   public List<Message> getAllMessages() {
     return messages;
-  }
-
-  public List<Message> getSpecificMessages(int numMessages) {
-    List<Message> limitedMessages;
-    if(numMessages < 0 || numMessages > messages.size() -1)
-        throw new IllegalArgumentException("Illegal Argument");
-    for(int i = 0; i < numMessages; i++){
-        limitedMessages.add(messages.get(i));
-    }
-    return limitedMessages;
   }
 
   private void addRandomUsers() {
@@ -133,6 +151,17 @@ public class DefaultDataStore {
       PersistentStorageAgent.getInstance().writeThrough(user);
       users.add(user);
     }
+  }
+
+  public List<Message> getNewMessages(int numMessages) {
+    if(messages.size()-numMessages < 0)
+	throw new IllegalArgumentException();
+
+    List<Message> newMessages = new ArrayList<>(numMessages);
+    for(int i = messages.size() - numMessages; i < messages.size(); i++){
+        newMessages.add(messages.get(i));
+    }
+    return newMessages;
   }
 
   private void addRandomConversations() {
