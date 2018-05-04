@@ -3,7 +3,6 @@
 <%@ page import="java.time.format.DateTimeFormatter" %>
 
 <!DOCTYPE html>
->>>>>>> 3fe9fb7f6aeef96395c64a9c445c3401639c2e66
 </html>
   <head>
   	<title>Profile</title>
