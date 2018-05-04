@@ -21,45 +21,55 @@ import org.mockito.ArgumentCaptor;
 
 public class ProfileServletTest {
 
- private ProfileServlet profileServlet;
- private HttpServletRequest mockRequest;
- private HttpSession mockSession;
- private HttpServletResponse mockResponse;
- private RequestDispatcher mockRequestDispatcher;
- private MessageStore mockMessageStore;
- private UserStore mockUserStore;
+   private ProfileServlet profileServlet;
+   private HttpServletRequest mockRequest;
+   private HttpSession mockSession;
+   private HttpServletResponse mockResponse;
+   private RequestDispatcher mockRequestDispatcher;
+   private MessageStore mockMessageStore;
+   private UserStore mockUserStore;
 
- @Before
- public void setup() {
-   profileServlet = new ProfileServlet();
-   mockRequest = Mockito.mock(HttpServletRequest.class);
-   mockSession = Mockito.mock(HttpSession.class);
-   Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
-   mockResponse = Mockito.mock(HttpServletResponse.class);
-   mockRequestDispatcher = Mockito.mock(RequestDispatcher.class);
-   Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/profile.jsp"))
-       .thenReturn(mockRequestDispatcher);
-   mockMessageStore = Mockito.mock(MessageStore.class);
-   profileServlet.setMessageStore(mockMessageStore);
-   mockUserStore = Mockito.mock(UserStore.class);
-   ProfileServlet.setUserStore(mockUserStore);
- }
+   @Before
+   public void setup() {
+      profileServlet = new ProfileServlet();
+      mockRequest = Mockito.mock(HttpServletRequest.class);
+      mockSession = Mockito.mock(HttpSession.class);
+      Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
+      mockResponse = Mockito.mock(HttpServletResponse.class);
+      mockRequestDispatcher = Mockito.mock(RequestDispatcher.class);
+      Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/profile.jsp"))
+          .thenReturn(mockRequestDispatcher);
+      mockMessageStore = Mockito.mock(MessageStore.class);
+      profileServlet.setMessageStore(mockMessageStore);
+      mockUserStore = Mockito.mock(UserStore.class);
+      ProfileServlet.setUserStore(mockUserStore);
+   }
 
- @Test
- public void testDoGet() throws IOException, ServletException {
-   Mockito.when(mockRequest.getName()).thenReturn("test username");
-   User mockUser = Mockito.mock(User.class);
-   Mockito.when(mockUserStore.getUser("test username")).thenReturn(mockUser);
+   @Test
+   public void testDoGet() throws IOException, ServletException {
+      List<Message> fakeMessages = new ArrayList<>();
+      fakeMessages.add(new Message(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID, "test message", Instant.now()));
+      Mockito.when(ProfileServlet.getAuthorMessages()).thenReturn(fakeMessages);
 
-   Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
+      Mockito.when(mockRequest.getName()).thenReturn("test username");
+      User mockUser = Mockito.mock(User.class);
+      Mockito.when(mockUserStore.getUser("test username")).thenReturn(mockUser);
 
-   Mockito.when(mockRequest.getSession().getAttribute("user")).thenReturn("test username");
-   profileServlet.doGet(mockRequest, mockResponse);
+      Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
 
-   //Mockito.verify(mockRequest).setAttribute("user", mockUser);
-   Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
- }
+      Mockito.when(mockRequest.getSession().getAttribute("user")).thenReturn("test username");
+      profileServlet.doGet(mockRequest, mockResponse);
+
+      Mockito.verify(mockRequest).setAttribute("user", "messages", mockUser, fakeMessages);
+      Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
+   }
+
+   @Test
+   public void testDoPost_UserNotLogin() throws IOException ServletException{
+      Mockito.when(mockSession.getAttribute("user")).thenReturn(null);
+      profileServlet.doPost(mockRequest, mockResponse);
+      Mockito.verify(mockResponse).sendRedirect("/profile");
+   }
 
 
-
- 
+} 
