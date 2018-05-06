@@ -17,13 +17,20 @@ package codeu.model.store.basic;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
+import codeu.model.data.SourceText;
 import codeu.model.store.persistence.PersistentStorageAgent;
+import codeu.model.store.persistence.PersistentDataStoreException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import org.mindrot.jbcrypt.*;
+
+/* To read from text file */
+import java.io.IOException; 
+import java.nio.file.Files; 
+import java.nio.file.Paths; 
 
 /**
  * This class makes it easy to add dummy data to your chat app instance. To use fake data, set
@@ -63,12 +70,14 @@ public class DefaultDataStore {
   private List<User> users;
   private List<Conversation> conversations;
   private List<Message> messages;
+  private List<SourceText> sources;
 
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private DefaultDataStore() {
     users = new ArrayList<>();
     conversations = new ArrayList<>();
     messages = new ArrayList<>();
+    sources = new ArrayList<>();
 
     if (USE_DEFAULT_DATA) {
       addRandomUsers();
@@ -104,7 +113,7 @@ public class DefaultDataStore {
     return conversations.get(conversations.size()-1);
   }
 
-  public void createNewConvo(int numUsers, int numMessages) {
+  public void createNewConvo(int numUsers, int numMessages, String source) throws PersistentDataStoreException, IOException {
     if(numUsers < 0 || numMessages < 0)
         throw new IllegalArgumentException("Illegal Argument");
     User [] newUsers = new User[numUsers];
@@ -125,9 +134,17 @@ public class DefaultDataStore {
       PersistentStorageAgent.getInstance().writeThrough(conversation);
       conversations.add(conversation);
 
+      sources.addAll(PersistentStorageAgent.getInstance().loadSourceTexts());
+      boolean needsLoading = true;
+      for (SourceText s : sources) {
+    	  if (s.getName().equals(source))
+    		  needsLoading = false;
+      }
+      if(needsLoading)
+    	  loadSource(source);
       for (int i = 0; i < numMessages; i++) {
       User author = newUsers[i % numUsers];
-      String content = getRandomMessageContent();
+      String content = getRandomMessageContent(source);
 
       Message message =
           new Message(
@@ -228,6 +245,14 @@ public class DefaultDataStore {
     return randomUsernames;
   }
 
+  private void loadSource(String source) throws PersistentDataStoreException, IOException {
+	    String content = new String(Files.readAllBytes(
+              Paths.get(source)));
+	    SourceText s = new SourceText(source,content);
+	  	PersistentStorageAgent.getInstance().writeThrough(s);
+	  	sources.add(s);
+  }
+  
   private String getRandomMessageContent() {
     String loremIpsum =
         "dolorem ipsum, quia dolor sit amet consectetur adipiscing velit, "
@@ -242,5 +267,21 @@ public class DefaultDataStore {
     String messageContent = loremIpsum.substring(startIndex, endIndex).trim();
 
     return messageContent;
+  }
+  
+  private String getRandomMessageContent(String source) {
+	    String content = "";
+	    for (int i = 0; i < sources.size(); i++) {
+	    	if (sources.get(i).getName().equals(source)) {
+	    		content = sources.get(i).getContent();
+	    		break;
+	    	}
+	    }
+	    
+	    int startIndex = (int) (Math.random() * (content.length() - 100));
+	  	int endIndex = (int) (startIndex + 10 + Math.random() * 90);
+	    String messageContent = content.substring(startIndex, endIndex).trim();
+	    
+	    return "hello";
   }
 }

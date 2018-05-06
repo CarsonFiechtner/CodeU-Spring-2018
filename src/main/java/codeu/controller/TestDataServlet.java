@@ -87,13 +87,16 @@ public class TestDataServlet extends HttpServlet {
       throws IOException, ServletException {
     String confirmButton = request.getParameter("confirm");
     int numUsers = 0, numMessages = 0;
+    String source = null;
     if(request.getParameter("numUsers") != null)
         numUsers = Integer.parseInt(request.getParameter("numUsers"));
     if(request.getParameter("numMessages") != null)
         numMessages = Integer.parseInt(request.getParameter("numMessages"));
+    if(request.getParameter("source") != null)
+        source = request.getParameter("source");
 
-    if (confirmButton != null && numUsers != 0 && numMessages != 0) {
-      conversationStore.loadTestData(numUsers, numMessages);
+    if (confirmButton != null && numUsers != 0 && numMessages != 0 && source != null) {
+      conversationStore.loadTestData(numUsers, numMessages, source);
       userStore.loadTestData(numUsers);
       messageStore.loadTestData(numMessages);
     }

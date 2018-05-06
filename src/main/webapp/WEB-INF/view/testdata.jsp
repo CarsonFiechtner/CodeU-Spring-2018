@@ -108,8 +108,9 @@
     <form action="/testdata" method="POST">
       <p>From source:
       <select name="source">
-        <option value="Romeo and Juliet">Romeo and Juliet</option>
-        <option value="Hamilton">Hamilton</option>
+        <option value="RomeoandJuliet.txt">Romeo and Juliet</option>
+        <option value="Hamilton.txt">Hamilton</option>
+        <option value="loremIpsum.txt">Lorem Ipsum</option>
       </select></p>
       <p>Number of Messages:
       <select name="numMessages">

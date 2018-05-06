@@ -79,10 +79,10 @@ public class ConversationStore {
    *
    * @return false if a error occurs.
    */
-  public boolean loadTestData(int numUsers, int numMessages) {
+  public boolean loadTestData(int numUsers, int numMessages, String source) {
     boolean loaded = false;
     try {
-      DefaultDataStore.getInstance().createNewConvo(numUsers, numMessages);
+      DefaultDataStore.getInstance().createNewConvo(numUsers, numMessages, source);
       conversations.add(DefaultDataStore.getInstance().getLastConversation());
       loaded = true;
     } catch (Exception e) {
