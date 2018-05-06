@@ -282,6 +282,6 @@ public class DefaultDataStore {
 	  	int endIndex = (int) (startIndex + 10 + Math.random() * 90);
 	    String messageContent = content.substring(startIndex, endIndex).trim();
 	    
-	    return "hello";
+	    return messageContent;
   }
 }
