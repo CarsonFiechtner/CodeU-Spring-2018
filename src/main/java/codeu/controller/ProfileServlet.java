@@ -113,7 +113,9 @@ public class ProfileServlet extends HttpServlet {
     }
 
     User user = userStore.getUser(currentUser);
-    user.setAboutMe((String) request.getParameter("aboutMe"));
+    request.setCharacterEncoding("UTF-8");//TODO
+    String aboutMe = (String) request.getParameter("aboutMe");
+    user.setAboutMe(aboutMe);
 
     response.sendRedirect("/profile");
   }
