@@ -22,7 +22,10 @@ Conversation conversation = (Conversation) request.getAttribute("conversation");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
 %>
 
-<!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=UTF-8"  
+    pageEncoding="UTF-8"%> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">  
+
 <html>
 <head>
   <title><%= conversation.getTitle() %></title>
@@ -50,7 +53,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
       <% if (request.getSession().getAttribute("user") != null) { %>
-    <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
+    <a href="/profile">Hello <%= request.getSession().getAttribute("user") %>!</a>
     <% } else { %>
       <a href="/login">Login</a>
       <a href="/register">Register</a>
