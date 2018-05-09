@@ -26,7 +26,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import org.mindrot.jbcrypt.*;
-
+import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileReader;
 /* To read from text file */
 import java.io.IOException; 
 import java.nio.file.Files; 
@@ -141,7 +143,7 @@ public class DefaultDataStore {
     		  needsLoading = false;
       }
       if(needsLoading)
-    	  loadSource(source);
+   	  loadSource(source);
       for (int i = 0; i < numMessages; i++) {
       User author = newUsers[i % numUsers];
       String content = getRandomMessageContent(source);
@@ -246,15 +248,27 @@ public class DefaultDataStore {
   }
 
   private void loadSource(String source) throws PersistentDataStoreException, IOException {
-	    String content = new String(Files.readAllBytes(
-              Paths.get(source)));
+//	    String content = new String(Files.readAllBytes(Paths.get(source)));
+ 	    //String content = Files.toString(source, Charsets.UTF_8)
+	    String content = "";
+	try {
+            BufferedReader in = new BufferedReader(new FileReader(source));
+            String str;
+            while ((str = in.readLine()) != null) {
+            	content +=str;
+            }
+            in.close();
 	    SourceText s = new SourceText(source,content);
-	  	PersistentStorageAgent.getInstance().writeThrough(s);
-	  	sources.add(s);
+	    PersistentStorageAgent.getInstance().writeThrough(s);
+	    sources.add(s);
+
+    	} catch (Exception e) {
+    	    e.printStackTrace();
+	}
   }
   
   private String getRandomMessageContent() {
-    String loremIpsum =
+    String loremIpsum = 
         "dolorem ipsum, quia dolor sit amet consectetur adipiscing velit, "
             + "sed quia non numquam do eius modi tempora incididunt, ut labore et dolore magnam "
             + "aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam "
@@ -264,13 +278,14 @@ public class DefaultDataStore {
 
     int startIndex = (int) (Math.random() * (loremIpsum.length() - 100));
     int endIndex = (int) (startIndex + 10 + Math.random() * 90);
-    String messageContent = loremIpsum.substring(startIndex, endIndex).trim();
+    
+    String messageContent = loremIpsum.substring(0, 2).trim();
 
     return messageContent;
   }
   
   private String getRandomMessageContent(String source) {
-	    String content = "";
+	    String content = "TEST";
 	    for (int i = 0; i < sources.size(); i++) {
 	    	if (sources.get(i).getName().equals(source)) {
 	    		content = sources.get(i).getContent();
@@ -278,8 +293,8 @@ public class DefaultDataStore {
 	    	}
 	    }
 	    
-	    int startIndex = (int) (Math.random() * (content.length() - 100));
-	  	int endIndex = (int) (startIndex + 10 + Math.random() * 90);
+	    int startIndex = (int) (Math.random() * (int)(content.length()/5));
+	    int endIndex = (int) (startIndex + 10 + Math.random() * (int)(content.length()/3));
 	    String messageContent = content.substring(startIndex, endIndex).trim();
 	    
 	    return messageContent;

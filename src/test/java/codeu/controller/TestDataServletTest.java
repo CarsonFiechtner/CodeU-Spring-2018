@@ -59,6 +59,7 @@ public class TestDataServletTest {
 
     mockUserStore = Mockito.mock(UserStore.class);
     testDataServlet.setUserStore(mockUserStore);
+
   }
 
   @Test
