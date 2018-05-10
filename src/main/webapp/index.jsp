@@ -31,7 +31,11 @@
       <a href="/register">Register</a>
     <% } %>
     <a href="/about.jsp">About</a>
-    <a href="/testdata">Load Test Data</a>
+    <% if(request.getSession().getAttribute("user") != null && (request.getSession().getAttribute("user").toString().equals("CarsonFiechtner") || 
+	request.getSession().getAttribute("user").toString().equals("AJPhillips") || request.getSession().getAttribute("user").toString().equals("CaseyChien") ||
+        request.getSession().getAttribute("user").toString().equals("JiaxinDu") || request.getSession().getAttribute("user").toString().equals("VolodyaShtenovych"))){ %>
+      <a href="/testdata">Admin Page</a>
+    <% } %>
   </nav>
 
   <div id="container">
@@ -47,8 +51,6 @@
             create or join a conversation.</li>
         <li>View the <a href="/about.jsp">about</a> page to learn more about the
             project.</li>
-        <li>You can <a href="/testdata">load test data</a> to fill the site with
-            example data.</li>
       </ul>
     </div>
   </div>

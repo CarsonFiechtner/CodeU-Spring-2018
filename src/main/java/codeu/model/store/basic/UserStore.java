@@ -15,10 +15,13 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.User;
+import codeu.model.data.Message;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.Instant;
+import codeu.model.store.basic.MessageStore;
 
 /**
  * Store class that uses in-memory data structures to hold values and automatically loads from and
@@ -58,6 +61,9 @@ public class UserStore {
   /** The in-memory list of Users. */
   private List<User> users;
 
+  /** These track the oldest and newest users, respectively */
+  private User oldestUser;
+  private User newestUser;
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private UserStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
@@ -65,8 +71,8 @@ public class UserStore {
   }
 
   /** Load a set of randomly-generated Message objects. */
-  public void loadTestData() {
-    users.addAll(DefaultDataStore.getInstance().getAllUsers());
+  public void loadTestData(int numUsers) {
+    users.addAll(DefaultDataStore.getInstance().getNewUsers(numUsers));
   }
 
   /**
@@ -85,6 +91,53 @@ public class UserStore {
   }
 
   /**
+   * Access the newest User object.
+   *
+   * @return The newest User's name.
+   */
+  public User getNewestUser() {
+    if(newestUser == null){
+      Instant testTime = Instant.EPOCH;
+      for (User user : users) {
+        if (user.getCreationTime().isAfter(testTime)) {
+	  testTime = user.getCreationTime();
+	  newestUser = user;
+        }
+      }
+    }
+    return newestUser;
+  }
+
+  /**
+   * Access the oldest User object.
+   *
+   * @return The oldest User's name.
+   */
+  public User getOldestUser() {
+    //This likely won't work if the oldest user is removed, but because we don't have that implemented yet, this works for now
+    if(oldestUser == null){
+      Instant testTime = Instant.now();
+      for (User user : users) {
+        if (user.getCreationTime().isBefore(testTime)) {
+	  testTime = user.getCreationTime();
+          oldestUser = user;
+        }
+      }
+    }
+    return oldestUser;
+  }
+
+  /**
+   * Get the number of Users currently stored
+   *
+   * @return The current number of users stored
+   */
+  public int getNumUsers() {
+        return users.size();
+  }
+
+
+  /**
    * Access the User object with the given UUID.
    *
    * @return null if the UUID does not match any existing User.
@@ -101,6 +154,7 @@ public class UserStore {
   /** Add a new user to the current set of users known to the application. */
   public void addUser(User user) {
     users.add(user);
+    newestUser = user;
     persistentStorageAgent.writeThrough(user);
   }
 
