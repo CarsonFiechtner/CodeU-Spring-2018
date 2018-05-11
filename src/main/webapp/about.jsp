@@ -28,12 +28,14 @@
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
     <% if(request.getSession().getAttribute("user") != null){ %>
-      <a href="/profile">Hello <%= request.getSession().getAttribute("user") %>!</a>
+      <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
+      <a href="/profile/<%= request.getSession().getAttribute("user") %>"><%= request.getSession().getAttribute("user") %>'s Profile</a>  
     <% } else{ %>
       <a href="/login">Login</a>
       <a href="/register">Register</a>
     <% } %>
     <a href="/about.jsp">About</a>
+
   </nav>
 
   <div id="container">
@@ -74,8 +76,8 @@
   <div id="container">
     <div 
          style="width:75%; margin-left:auto; margin-right:auto; margin-top: 50px;">
-      <h1>About CodeU Team 34</h1>
-      <p>This is Team 34. ...</p>
+      <h1>About CodeU Team Hippopotami</h1>
+      <p>This is Team Hippopotami.</p>
 
       <h2>Introduction of Members</h2>
       <ul>
@@ -85,9 +87,10 @@
           Volodya graduated from Ivan Franko National University of Lviv in 2009. He lived 4 years in Poland before
           infiltrating San Francisco bay area. Volodya is more productive in Google Docs than in an IDE.
           Volodya plays ping pong and pool during work hours and rides road bike on weekends.</li>
+          
       	<li><strong>Jiaxin Du:</strong>
       		I am from China and a student studying Computer Science at University of 
-          California, Irvine. I love traveling and swimming. </li>
+          California, Irvine. I love traveling and coding to find something new. </li>
 
       	<li><strong>AJ Phillips: </strong>
       		I am from Las Cruces, New Mexico. I am 19 and a student at New Mexico 
