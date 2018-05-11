@@ -20,9 +20,10 @@
 <%@ page import="codeu.model.store.basic.MessageStore" %>
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.data.User" %>
-<%@ page contentType="text/html" import="java.util.*" %>
-<%@ page contentType="text/html" import="java.text.*" %>
-<!DOCTYPE html>
+<%@ page import="java.util.*" %>
+<%@ page import="java.text.*" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 
 <head>
