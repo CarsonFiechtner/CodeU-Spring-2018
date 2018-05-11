@@ -31,11 +31,12 @@
       <a href="/register">Register</a>
     <% } %>
     <a href="/about.jsp">About</a>
-    <% if(request.getSession().getAttribute("user") != null && (request.getSession().getAttribute("user").toString().equals("CarsonFiechtner") || 
+    <a href="/testdata">Admin Page</a>
+
+<!--    <% if(request.getSession().getAttribute("user") != null && (request.getSession().getAttribute("user").toString().equals("CarsonFiechtner") || 
 	request.getSession().getAttribute("user").toString().equals("AJPhillips") || request.getSession().getAttribute("user").toString().equals("CaseyChien") ||
         request.getSession().getAttribute("user").toString().equals("JiaxinDu") || request.getSession().getAttribute("user").toString().equals("VolodyaShtenovych"))){ %>
-      <a href="/testdata">Admin Page</a>
-    <% } %>
+    <% } %> -->
   </nav>
 
   <div id="container">
