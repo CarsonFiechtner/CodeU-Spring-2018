@@ -43,8 +43,7 @@
     <div
       style="width:75%; margin-left:auto; margin-right:auto; margin-top: 50px;">
 
-      <h1>The CodeU Chat App Presented by the One and Only Team 34</h1>
-      <h2>The Hippopotami welcome you!</h2>
+      <h1>Presented by The Hippopotami</h1>
 
       <ul>
         <li><a href="/login">Login</a> to get started.</li>
@@ -52,6 +51,8 @@
             create or join a conversation.</li>
         <li>View the <a href="/about.jsp">about</a> page to learn more about the
             project.</li>
+        <li>Check out the <a href="/testdata">admin page</a> to learn about site statistics and test out our conversations by loading your choice of test data!</li>
+        <li>Don't forget to take a look at our user profile pages and create your own!</li>
       </ul>
     </div>
   </div>
