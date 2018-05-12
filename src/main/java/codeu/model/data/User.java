@@ -16,6 +16,7 @@ package codeu.model.data;
 
 import java.time.Instant;
 import java.util.UUID;
+import java.util.List;
 import org.mindrot.jbcrypt.BCrypt;
 
 /** Class representing a registered user. */
@@ -24,6 +25,8 @@ public class User {
   private final String name;
   private final String hashedPassword;
   private final Instant creation;
+  private String aboutMe;
+  
 
   /**
    * Constructs a new User.
@@ -38,6 +41,7 @@ public class User {
     this.name = name;
     this.hashedPassword = hashedPassword;
     this.creation = creation;
+    this.aboutMe = "Hello, I am "+this.name+".";
   }
 
   /** Returns the ID of this User. */
@@ -61,4 +65,16 @@ public class User {
   public Instant getCreationTime() {
     return creation;
   }
+
+  /** Changes the information of this User. */
+  public void setAboutMe(String newAboutMe){
+    this.aboutMe = newAboutMe;
+  }
+
+  /** Returns the information of this User. */
+  public String getAboutMe(){
+    return aboutMe;
+  }
+
+
 }
