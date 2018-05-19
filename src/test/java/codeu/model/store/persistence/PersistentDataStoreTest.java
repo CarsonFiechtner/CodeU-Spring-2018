@@ -59,8 +59,6 @@ public class PersistentDataStoreTest {
 
     // load
     List<User> resultUsers = persistentDataStore.loadUsers();
-    for(User user : resultUsers)
-	System.out.println(user.getId());
     // confirm that what we saved matches what we loaded
     User resultUserOne = resultUsers.get(0);
     Assert.assertEquals(idOne, resultUserOne.getId());
@@ -134,8 +132,6 @@ public class PersistentDataStoreTest {
 
     // load
     List<Message> resultMessages = persistentDataStore.loadMessages();
-    for(Message message : resultMessages)
-	System.out.println(message.getId());
 
     // confirm that what we saved matches what we loaded
     Message resultMessageOne = resultMessages.get(0);

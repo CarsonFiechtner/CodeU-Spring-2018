@@ -73,6 +73,7 @@ public class ProfileServlet extends HttpServlet {
     if (user == null) {
       // if user is not found, send a 404 code
       response.sendError(HttpServletResponse.SC_NOT_FOUND);
+      return;
     }
 
     request.setAttribute(user.getName(), user);
