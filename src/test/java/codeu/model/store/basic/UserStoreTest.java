@@ -90,6 +90,23 @@ public class UserStoreTest {
   }
 
   @Test
+  public void testUpdateUser() {
+
+    User inputUser = new User(UUID.randomUUID(), "test_username", "password", Instant.now());
+    userStore.addUser(inputUser);
+
+    String newAboutMe = "New About Me";
+    User resultUser = userStore.getUser("test_username");
+
+    resultUser.setAboutMe(newAboutMe);
+    userStore.updateUser(resultUser);
+
+    User finalUser = userStore.getUser("test_username");
+    Assert.assertEquals(finalUser, userStore.getNewestUser());
+    Assert.assertEquals(finalUser.getAboutMe(), newAboutMe);
+  }
+
+  @Test
   public void testIsUserRegistered_true() {
     Assert.assertTrue(userStore.isUserRegistered(USER_ONE.getName()));
   }

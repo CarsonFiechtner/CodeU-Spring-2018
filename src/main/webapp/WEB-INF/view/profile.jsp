@@ -1,6 +1,12 @@
+
+<%@ page import="codeu.model.store.basic.UserStore" %>
+<%@ page import="codeu.model.store.basic.MessageStore" %>
+<%@ page import="codeu.model.data.Message" %>
+<%@ page import="codeu.model.data.User" %>
 <%@ page import="java.util.List"%>
 <%@ page import="java.time.Instant"%>
-<%@ page import="codeu.model.data.Message"%>
+<%@ page import="java.util.Date"%>
+<%@ page import="java.text.SimpleDateFormat"%>
 <%@ page import="java.time.format.DateTimeFormatter"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"  
     pageEncoding="UTF-8"%> 
@@ -13,6 +19,10 @@
 </head>
 <body>
 	<nav>
+		<% User currentUser = UserStore.getInstance().getUser(request.getParameter("value"));
+		   if(currentUser == null){
+			currentUser = UserStore.getInstance().getUser((String) request.getSession().getAttribute("user"));
+		   }  %>
 		<a id="navTitle" href="/">CodeU Chat App</a> <a href="/conversations">Conversations</a>
 		<% if(request.getSession().getAttribute("user") != null){ %>
 		<a>Hello <%= request.getSession().getAttribute("user") %>!
@@ -26,18 +36,19 @@
   </nav>
 	<div id="container">
 		<h1>
-			<% if(request.getSession().getAttribute("user") != null){ %>
-			<a><%= request.getSession().getAttribute("user") %>'s Profile
+			<% if(currentUser != null){ %>
+			<a><%= currentUser.getName() %>'s Profile
 				Page</a>
 		</h1>
 		<hr>
 		<a>
 			<h3>
 				About
-				<%= request.getSession().getAttribute("user") %></h3>
-			<p style="font-size: 16px"><%= request.getAttribute("aboutMe")%></p>
+				<%= currentUser.getName() %></h3>
+			<p style="font-size: 16px"><%= currentUser.getAboutMe() %></p>
 		</a>
 		<h3>
+		    <% if(currentUser.getName().equals(request.getSession().getAttribute("user"))) { %>
 			Edit your About Me (only you can see this)
 			<h3>
 				<form action="/profile" method="POST">
@@ -48,18 +59,24 @@
 					<button type="submit">Submit</button>
 				</form>
 				<hr>
-				<a><h3><%= request.getSession().getAttribute("user") %>'s
-						Sent Messages
+		    <% } %>
+				<a><h3><%= currentUser.getName() %>'s
+						Recent Messages
 					</h3></a>
 				<% List<Message> messages = (List<Message>) request.getAttribute("authorMessages");
       if(messages == null | messages.size() == 0){ %>
-				<p>You have not sent any messages.</p>
+				<p>No recent messages.</p>
 				<% } else { %>
-				<% for(Message message: messages) { %>
+				<% int i = 0;
+				   while(i < messages.size() && i < 10) { 
+				       Date newTime = Date.from(messages.get(i).getCreationTime());
+        			       SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        			       String messageTime = formatter.format(newTime); %>
 				<p>
-				<li><b><%= message.getCreationTime() %>:</b> <%= message.getContent()%></li>
+				<li><b><%= messageTime %>:</b> <%= messages.get(i).getContent()%></li>
 				</p>
-				<% } %>
+				<%     i++;
+				   } %>
 				<% } %>
 				
 				<% } else{ %>
