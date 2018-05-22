@@ -57,6 +57,20 @@ public class UserStoreTest {
   }
 
   @Test
+  public void testNumUsers() {
+    int count = userStore.getNumUsers();
+
+    Assert.assertEquals(count, 3);
+  }
+
+  @Test
+  public void testOldestUser() {
+    User oldUser = userStore.getOldestUser();
+
+    Assert.assertEquals(oldUser, USER_ONE);
+  }
+
+  @Test
   public void testGetUser_byId_notFound() {
     User resultUser = userStore.getUser(UUID.randomUUID());
 
@@ -70,6 +84,7 @@ public class UserStoreTest {
     userStore.addUser(inputUser);
     User resultUser = userStore.getUser("test_username");
 
+    Assert.assertEquals(inputUser, userStore.getNewestUser());
     assertEquals(inputUser, resultUser);
     Mockito.verify(mockPersistentStorageAgent).writeThrough(inputUser);
   }

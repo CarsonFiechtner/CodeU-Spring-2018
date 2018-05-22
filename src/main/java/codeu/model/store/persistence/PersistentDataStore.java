@@ -17,6 +17,7 @@ package codeu.model.store.persistence;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
+import codeu.model.data.SourceText;
 import codeu.model.store.persistence.PersistentDataStoreException;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -66,7 +67,9 @@ public class PersistentDataStore {
         String userName = (String) entity.getProperty("username");
         String password = (String) entity.getProperty("password");
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
+        String aboutMe = (String) entity.getProperty("aboutMe");
         User user = new User(uuid, userName, password, creationTime);
+        user.setAboutMe(aboutMe);
         users.add(user);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -145,6 +148,37 @@ public class PersistentDataStore {
 
     return messages;
   }
+  
+  /**
+   * Loads all source texts from the Datastore service and returns them in a List.
+   *
+   * @throws PersistentDataStoreException if an error was detected during the load from the
+   *     Datastore service
+   */
+  public List<SourceText> loadSourceTexts() throws PersistentDataStoreException {
+
+    List<SourceText> sourceTexts = new ArrayList<>();
+
+    // Retrieve all source texts from the datastore.
+    Query query = new Query("source-texts");
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      try {
+        String content = (String) entity.getProperty("content");
+        String name = (String) entity.getProperty("name");
+        SourceText source = new SourceText(name, content);
+        sourceTexts.add(source);
+      } catch (Exception e) {
+        // In a production environment, errors should be very rare. Errors which may
+        // occur include network errors, Datastore service errors, authorization errors,
+        // database entity definition mismatches, or service mismatches.
+        throw new PersistentDataStoreException(e);
+      }
+    }
+
+    return sourceTexts;
+  }
 
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
@@ -153,6 +187,7 @@ public class PersistentDataStore {
     userEntity.setProperty("username", user.getName());
     userEntity.setProperty("password", user.getPassword());
     userEntity.setProperty("creation_time", user.getCreationTime().toString());
+    userEntity.setProperty("aboutMe", user.getAboutMe());
     datastore.put(userEntity);
   }
 
@@ -164,6 +199,14 @@ public class PersistentDataStore {
     messageEntity.setProperty("author_uuid", message.getAuthorId().toString());
     messageEntity.setProperty("content", message.getContent());
     messageEntity.setProperty("creation_time", message.getCreationTime().toString());
+    datastore.put(messageEntity);
+  }
+  
+  /** Write a source text to the Datastore service. */
+  public void writeThrough(SourceText source) {
+    Entity messageEntity = new Entity("source-texts");
+    messageEntity.setProperty("content", source.getContent());
+    messageEntity.setProperty("name", source.getName());
     datastore.put(messageEntity);
   }
 

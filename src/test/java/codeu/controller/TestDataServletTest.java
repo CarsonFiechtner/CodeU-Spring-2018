@@ -59,6 +59,7 @@ public class TestDataServletTest {
 
     mockUserStore = Mockito.mock(UserStore.class);
     testDataServlet.setUserStore(mockUserStore);
+
   }
 
   @Test
@@ -71,12 +72,15 @@ public class TestDataServletTest {
   @Test
   public void testDoPost_Confirm() throws IOException, ServletException {
     Mockito.when(mockRequest.getParameter("confirm")).thenReturn("confirm");
+    Mockito.when(mockRequest.getParameter("numUsers")).thenReturn("10");
+    Mockito.when(mockRequest.getParameter("numMessages")).thenReturn("10");
+    Mockito.when(mockRequest.getParameter("source")).thenReturn("loremIpsum.txt");
 
     testDataServlet.doPost(mockRequest, mockResponse);
 
-    Mockito.verify(mockUserStore).loadTestData();
-    Mockito.verify(mockConversationStore).loadTestData();
-    Mockito.verify(mockMessageStore).loadTestData();
+    Mockito.verify(mockUserStore).loadTestData(10);
+    Mockito.verify(mockConversationStore).loadTestData(10, 10, "loremIpsum.txt");
+    Mockito.verify(mockMessageStore).loadTestData(10);
     Mockito.verify(mockResponse).sendRedirect("/");
   }
 
@@ -84,12 +88,15 @@ public class TestDataServletTest {
   public void testDoPost_Cancel() throws IOException, ServletException {
     Mockito.when(mockRequest.getParameter("confirm")).thenReturn(null);
     Mockito.when(mockRequest.getParameter("cancel")).thenReturn("cancel");
+    Mockito.when(mockRequest.getParameter("numUsers")).thenReturn("10");
+    Mockito.when(mockRequest.getParameter("numMessages")).thenReturn("10");
+    Mockito.when(mockRequest.getParameter("source")).thenReturn("loremIpsum.txt");
 
     testDataServlet.doPost(mockRequest, mockResponse);
 
-    Mockito.verify(mockUserStore, Mockito.never()).loadTestData();
-    Mockito.verify(mockConversationStore, Mockito.never()).loadTestData();
-    Mockito.verify(mockMessageStore, Mockito.never()).loadTestData();
+    Mockito.verify(mockUserStore, Mockito.never()).loadTestData(10);
+    Mockito.verify(mockConversationStore, Mockito.never()).loadTestData(10, 10, "loremIpsum.txt");
+    Mockito.verify(mockMessageStore, Mockito.never()).loadTestData(10);
     Mockito.verify(mockResponse).sendRedirect("/");
   }
 }

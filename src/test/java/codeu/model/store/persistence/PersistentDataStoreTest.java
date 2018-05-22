@@ -3,6 +3,7 @@ package codeu.model.store.persistence;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
+import codeu.model.data.SourceText;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import java.time.Instant;
@@ -145,5 +146,34 @@ public class PersistentDataStoreTest {
     Assert.assertEquals(authorTwo, resultMessageTwo.getAuthorId());
     Assert.assertEquals(contentTwo, resultMessageTwo.getContent());
     Assert.assertEquals(creationTwo, resultMessageTwo.getCreationTime());
+  }
+  
+  @Test
+  public void testSaveAndLoadSourceTexts() throws PersistentDataStoreException {
+    String nameOne = "test name one";
+    String contentOne = "test content one";
+    SourceText inputSourceOne =
+        new SourceText(nameOne, contentOne);
+
+    String nameTwo = "test name two";
+    String contentTwo = "test content two";
+    SourceText inputSourceTwo =
+        new SourceText(nameTwo, contentTwo);
+
+    // save
+    persistentDataStore.writeThrough(inputSourceOne);
+    persistentDataStore.writeThrough(inputSourceTwo);
+
+    // load
+    List<SourceText> resultSourceTexts = persistentDataStore.loadSourceTexts();
+
+    // confirm that what we saved matches what we loaded
+    SourceText resultSourceOne = resultSourceTexts.get(0);
+    Assert.assertEquals(nameOne, resultSourceOne.getName());
+    Assert.assertEquals(contentOne, resultSourceOne.getContent());
+
+    SourceText resultSourceTwo = resultSourceTexts.get(1);
+    Assert.assertEquals(nameTwo, resultSourceTwo.getName());
+    Assert.assertEquals(contentTwo, resultSourceTwo.getContent());
   }
 }
