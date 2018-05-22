@@ -57,6 +57,7 @@
             project.</li>
         <li>Check out the <a href="/testdata">admin page</a> to learn about site statistics and test out our conversations by loading your choice of test data!</li>
         <li>Don't forget to take a look at our user profile pages and create your own!</li>
+        <li>Tired of chatting? <a href="/delete">Delete your account</a></li>
       </ul>
     </div>
   </div>

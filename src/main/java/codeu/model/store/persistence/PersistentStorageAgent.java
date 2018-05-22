@@ -115,8 +115,23 @@ public class PersistentStorageAgent {
     persistentDataStore.writeThrough(source);
   }
 
-  /** Write a Conversation object to the Datastore service. */
+  /** Write a Message object to the Datastore service. */
   public void writeThrough(Message message) {
     persistentDataStore.writeThrough(message);
+  }
+
+  /** Remove a List of Message objects from the Datastore service. */
+  public void deleteThrough(List<Conversation> conversation) {
+    persistentDataStore.deleteThrough(conversation);
+  }
+
+  /** Remove a User from the Datastore service. */
+  public void deleteThrough(User user) {
+    persistentDataStore.deleteThrough(user);
+  }
+
+  /** Remove a Message object from the Datastore service. */
+  public void deleteThroughMessages(List<Message> message) {
+    persistentDataStore.deleteThroughMessages(message);
   }
 }

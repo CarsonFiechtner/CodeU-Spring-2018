@@ -15,6 +15,7 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Conversation;
+import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,6 +102,17 @@ public class ConversationStore {
   public void addConversation(Conversation conversation) {
     conversations.add(conversation);
     persistentStorageAgent.writeThrough(conversation);
+  }
+
+  public void removeUserConversations(User user) {
+    List<Conversation> removedConversations = new ArrayList<>();
+    for(int i = conversations.size()-1; i >= 0; i--){
+        if(conversations.get(i).getOwnerId() == user.getId()){
+	    removedConversations.add(conversations.get(i));
+            conversations.remove(i);
+        }
+    }
+    persistentStorageAgent.deleteThrough(removedConversations);
   }
 
   /** Check whether a Conversation title is already known to the application. */
