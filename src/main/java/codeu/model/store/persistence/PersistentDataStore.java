@@ -22,7 +22,6 @@ import codeu.model.store.persistence.PersistentDataStoreException;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
@@ -195,7 +194,7 @@ public class PersistentDataStore {
 
   /** Write a Message object to the Datastore service. */
   public void writeThrough(Message message) {
-    Entity messageEntity = new Entity("chat-messages", message.getId().toString());
+    Entity messageEntity = new Entity("chat-messages");
     messageEntity.setProperty("uuid", message.getId().toString());
     messageEntity.setProperty("conv_uuid", message.getConversationId().toString());
     messageEntity.setProperty("author_uuid", message.getAuthorId().toString());
@@ -214,28 +213,11 @@ public class PersistentDataStore {
 
   /** Write a Conversation object to the Datastore service. */
   public void writeThrough(Conversation conversation) {
-    Entity conversationEntity = new Entity("chat-conversations", conversation.getId().toString());
+    Entity conversationEntity = new Entity("chat-conversations");
     conversationEntity.setProperty("uuid", conversation.getId().toString());
     conversationEntity.setProperty("owner_uuid", conversation.getOwnerId().toString());
     conversationEntity.setProperty("title", conversation.getTitle());
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toString());
     datastore.put(conversationEntity);
-  }
-
-  /** Remove a List of Message objects from the Datastore service. */
-  public void deleteThrough(List<Conversation> conversations) {
-	
-  }
-
-  /** Remove a User from the Datastore service. */
-  public void deleteThrough(User user) {
-    Entity userEntity = new Entity("chat-users", user.getId().toString());
-    Key key = userEntity.getKey();
-    datastore.delete(key);
-  }
-
-  /** Remove a Message object from the Datastore service. */
-  public void deleteThroughMessages(List<Message> messages) {
-
   }
 }
