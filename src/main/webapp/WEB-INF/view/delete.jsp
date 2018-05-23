@@ -20,6 +20,9 @@ function myFunction() {
 function myFunction2() {
     document.getElementById("confirm3").style.display="block";
 }
+function myFunction3() {
+    document.getElementById("confirm4").style.display="block";
+}
 </script>
 </head>
 <body>
@@ -54,10 +57,14 @@ function myFunction2() {
       </div>
       <div id="confirm3" style="display: none">
         <p>Final answer?</p>
-	<input type="radio" name="confirm3" id="confirm3_true" value="confirm3" />
+	<input type="radio" name="confirm3" id="confirm3_true" onchange="myFunction3()" value="confirm3" />
 	<label for="confirm3_true">YES!</label>
 	<input type="radio" name="confirm3" id="confirm3_false" value="cancel3" checked/>
 	<label for="confirm3_true">NO!</label>
+      </div>
+      <div id="confirm4" style="display: none">
+        <p>Just to be sure, please confirm your username.</p>
+        <input type="text" name="confirmUsername" />
       </div>
       <button type="submit" value="confirm" name="confirm">Confirm</button>
       <button type="submit" value="cancel" name="cancel">Cancel</button>

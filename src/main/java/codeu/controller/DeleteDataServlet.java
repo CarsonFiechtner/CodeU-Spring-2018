@@ -101,8 +101,11 @@ public class DeleteDataServlet extends HttpServlet {
     	    confirmed = false;
 	}
     }
-    if(confirmed){
         String username = (String) request.getSession().getAttribute("user");
+    if(!request.getParameter("confirmUsername").equals(username)){
+	confirmed = false;
+    }
+    if(confirmed){
         User user = userStore.getUser(username);
         messageStore.removeUserMessages(user);
         conversationStore.removeUserConversations(user);
