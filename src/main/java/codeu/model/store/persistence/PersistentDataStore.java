@@ -224,7 +224,11 @@ public class PersistentDataStore {
 
   /** Remove a List of Message objects from the Datastore service. */
   public void deleteThrough(List<Conversation> conversations) {
-	
+    for(int i = 0; i < conversations.size(); i++){
+	Entity conversationEntity = new Entity("chat-conversations", conversations.get(i).getId().toString());
+        Key key = conversationEntity.getKey();
+        datastore.delete(key);
+    }
   }
 
   /** Remove a User from the Datastore service. */
@@ -236,6 +240,10 @@ public class PersistentDataStore {
 
   /** Remove a Message object from the Datastore service. */
   public void deleteThroughMessages(List<Message> messages) {
-
+    for(int i = 0; i < messages.size(); i++){
+	Entity messageEntity = new Entity("chat-messages", messages.get(i).getId().toString());
+        Key key = messageEntity.getKey();
+        datastore.delete(key);
+    }
   }
 }

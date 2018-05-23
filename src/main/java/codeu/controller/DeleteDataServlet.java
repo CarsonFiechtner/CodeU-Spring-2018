@@ -97,15 +97,15 @@ public class DeleteDataServlet extends HttpServlet {
 	confirms[3] = request.getParameter("confirm3");
     boolean confirmed = true;
     for(int i = 0; i < 4; i++){
-	if(confirms[i] == null){
+	if(!confirms[i].contains("confirm")){
     	    confirmed = false;
 	}
     }
     if(confirmed){
         String username = (String) request.getSession().getAttribute("user");
         User user = userStore.getUser(username);
-//        messageStore.removeUserMessages(user);
-  //      conversationStore.removeUserConversations(user);
+        messageStore.removeUserMessages(user);
+        conversationStore.removeUserConversations(user);
         userStore.removeUser(user);
         request.getSession().setAttribute("user", null);
     }

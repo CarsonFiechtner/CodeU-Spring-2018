@@ -107,7 +107,7 @@ public class ConversationStore {
   public void removeUserConversations(User user) {
     List<Conversation> removedConversations = new ArrayList<>();
     for(int i = conversations.size()-1; i >= 0; i--){
-        if(conversations.get(i).getOwnerId() == user.getId()){
+        if(conversations.get(i).getOwnerId().toString().equals(user.getId().toString())){
 	    removedConversations.add(conversations.get(i));
             conversations.remove(i);
         }

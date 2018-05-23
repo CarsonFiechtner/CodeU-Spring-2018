@@ -198,7 +198,7 @@ public class MessageStore {
   public void removeUserMessages(User user){
     List<Message> removedMessages = new ArrayList<>();
     for(int i = messages.size()-1; i >= 0; i--){
-        if(messages.get(i).getAuthorId() == user.getId()){
+        if(messages.get(i).getAuthorId().toString().equals(user.getId().toString())){
 	    removedMessages.add(messages.get(i));
             messages.remove(i);
         }
