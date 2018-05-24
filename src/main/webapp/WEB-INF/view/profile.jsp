@@ -1,4 +1,18 @@
+<%--
+  Copyright 2017 Google Inc.
 
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--%>
 <%@ page import="codeu.model.store.basic.UserStore" %>
 <%@ page import="codeu.model.store.basic.MessageStore" %>
 <%@ page import="codeu.model.data.Message" %>
@@ -16,6 +30,46 @@
 <head>
 <title>Profile</title>
 <link rel="stylesheet" href="/css/main.css">
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<style type="text/css">
+
+.Profile_img{
+		    width: 100%;
+		    background-color: #fff;
+		    padding: 10px;
+		}
+	 	.Profile_img>div{
+		    width: 78px;
+		    height: 78px;
+		    border: 1px solid #ddd;
+		    margin-top: 10px;
+		    line-height: 78px;
+		    text-align: center;
+		}
+		#Profile_addImg>img{
+		    width: 100%;
+   		    height: 100%;
+		}
+		.msg{
+		    font-size: 15px;
+                    color: red;
+                    padding-left: 5px;
+		}
+		.tip{
+		    position: relative;
+		    margin-top: 4px;
+             margin-left: 4px;
+		}
+		.tip>#file_input{
+		    position: absolute;
+		    top: 0;
+		    left: -120px;
+		    z-index: 3;
+		    opacity: 0;
+		}
+
+</style>
 </head>
 <body>
 	<nav>
@@ -47,17 +101,47 @@
 				<%= currentUser.getName() %></h3>
 			<p style="font-size: 16px"><%= currentUser.getAboutMe() %></p>
 		</a>
-		<h3>
+
 		    <% if(currentUser.getName().equals(request.getSession().getAttribute("user"))) { %>
-			Edit your About Me (only you can see this)
-			<h3>
+			
+		
+				<form action="/profile" method="POST" enctype="multipart/form-data">
+				<!-- <label>Upload your profile picture</label> <br /> 
+				     <input id="fileupload" type="file" name="profilePic"
+						accept=".jpg, .jpeg, .png"> <br /> 
+						<b>Live Preview</b> 
+						<br />
+						
+			
+					<img id="myImg" style="width: 190px;" src="#" alt="your image" /> <br />
+			 -->
+				
+					<div class="Profile_img">
+				        <span>Your profile picture</span>
+				        <div class="Profile_addImg" id="Profile_addImg">
+				          <!-- <img id="myImg" style="width: 190px;" src="#" alt="your image" /> -->
+				        <img id="myImg" src="/upload/<%= request.getSession().getAttribute("user") %>.png" alt="your image"  onError='this.src="http://hanslodge.com/data_images/326062.jpg"' />
+				        	
+				    	</div>
+					</div>
+					<span class="msg"></span>
+					<div class="tip">Select your profile picture
+						 <input id="fileupload" type="file" name="profilePic"
+						accept=".jpg, .jpeg, .png">
+					</div> 
+				</form>
+					 <br />
 				<form action="/profile" method="POST">
 					<label for="aboutMe"></label>
+					<h3>
+					Edit your About Me (only you can see this)
+					</h3>
 					<textarea name="aboutMe" style="font-size: 16px"
 						placeholder="Write something about yourself" cols="72" rows="6"></textarea>
 					<hr style="height: 0px; visibility: hidden;" />
 					<button type="submit">Submit</button>
 				</form>
+
 				<hr>
 		    <% } %>
 				<a><h3><%= currentUser.getName() %>'s
@@ -84,5 +168,21 @@
 				<% } %>
 			
 	</div>
+<script language="javascript" type="text/javascript">
+	 $(function() {
+		$(":file").change(function() {
+			if (this.files && this.files[0]) {
+				var reader = new FileReader();
+				reader.onload = imageIsLoaded;
+				reader.readAsDataURL(this.files[0]);
+			}
+		});
+	});
+	function imageIsLoaded(e) {
+		$('#myImg').attr('src', e.target.result);
+	}; 
+	
+	
+</script>
 </body>
 </html>
