@@ -1,4 +1,3 @@
-
 <%@ page import="codeu.model.store.basic.UserStore" %>
 <%@ page import="codeu.model.store.basic.MessageStore" %>
 <%@ page import="codeu.model.data.Message" %>
@@ -32,6 +31,7 @@
 		<a href="/login">Login</a> <a href="/register">Register</a>
 		<% } %>
 		<a href="/about.jsp">About</a>
+		<a href="/testdata">Admin Page</a>
 
   </nav>
 	<div id="container">
