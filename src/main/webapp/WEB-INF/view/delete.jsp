@@ -22,8 +22,10 @@ function myFunction2() {
 }
 function myFunction3() {
     document.getElementById("confirm4").style.display="block";
+    document.getElementById("confirm5").style.display="block";
 }
 </script>
+<script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <body>
 
@@ -31,11 +33,12 @@ function myFunction3() {
    <a id="navTitle" href="/">CodeU Chat App</a>
    <a href="/conversations">Conversations</a>
    <% if(request.getSession().getAttribute("user") != null){ %>
-     <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
-     <a href="/profile/<%= request.getSession().getAttribute("user") %>"><%= request.getSession().getAttribute("user") %>'s Profile</a>
+     <a href="/profile/<%= request.getSession().getAttribute("user") %>">Your Profile</a>
    <% } else{ %>
      <a href="/login">Login</a>
    <% } %>
+     <a href="/about.jsp">About</a>
+     <a href="/testdata">Admin Page</a>
 
  </nav>
  <div id="container">
@@ -66,6 +69,9 @@ function myFunction3() {
         <p>Just to be sure, please confirm your username.</p>
         <input type="text" name="confirmUsername" />
       </div>
+	</br>
+      <div id="confirm5" class="g-recaptcha" data-sitekey="6Lch1FoUAAAAABbP7DHTbXtfVN4VqkNrAZ1gnnQ6" style="display: none"></div>
+      </br>
       <button type="submit" value="confirm" name="confirm">Confirm</button>
       <button type="submit" value="cancel" name="cancel">Cancel</button>
     </form>

@@ -1,6 +1,7 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Conversation;
+import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -76,6 +77,24 @@ public class ConversationStoreTest {
 
     assertEquals(inputConversation, resultConversation);
     Mockito.verify(mockPersistentStorageAgent).writeThrough(inputConversation);
+  }
+
+  @Test
+  public void testRemoveUserConversations() {
+
+    User inputUser = new User(UUID.randomUUID(), "test_username", "password", Instant.now());
+    Conversation inputConversation =
+        new Conversation(UUID.randomUUID(), inputUser.getId(), "test_conversation", Instant.now());
+
+    conversationStore.addConversation(inputConversation);
+    conversationStore.removeUserConversations(inputUser);
+    Conversation resultConversation =
+        conversationStore.getConversationWithTitle("test_conversation");
+    List<Conversation> removedConvos = new ArrayList<>();
+    removedConvos.add(inputConversation);
+
+    Assert.assertEquals(null, resultConversation);
+    Mockito.verify(mockPersistentStorageAgent).deleteThrough(removedConvos);
   }
 
   private void assertEquals(Conversation expectedConversation, Conversation actualConversation) {
