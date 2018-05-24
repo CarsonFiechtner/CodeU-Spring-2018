@@ -6,7 +6,6 @@ import codeu.model.data.User;
 import codeu.model.data.SourceText;
 import java.time.Instant;
 import java.util.UUID;
-import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -82,20 +81,5 @@ public class PersistentStorageAgentTest {
         new SourceText("test name", "test content");
     persistentStorageAgent.writeThrough(source);
     Mockito.verify(mockPersistentDataStore).writeThrough(source);
-  }
-
-  public void testDeleteThroughUser(User user) {
-    persistentStorageAgent.deleteThrough(user);
-    Mockito.verify(mockPersistentDataStore).deleteThrough(user);
-  }
-
-  public void testDeleteThroughConversations(List<Conversation> convos) {
-    persistentStorageAgent.deleteThrough(convos);
-    Mockito.verify(mockPersistentDataStore).deleteThrough(convos);
-  }
-
-  public void testDeleteThroughMessages(List<Message> messages) {
-    persistentStorageAgent.deleteThroughMessages(messages);
-    Mockito.verify(mockPersistentDataStore).deleteThroughMessages(messages);
   }
 }

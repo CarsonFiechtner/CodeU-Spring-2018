@@ -45,9 +45,6 @@ public class PersistentDataStoreTest {
     Instant creationOne = Instant.ofEpochMilli(1000);
     User inputUserOne = new User(idOne, nameOne, passwordOne, creationOne);
 
-    // save
-    persistentDataStore.writeThrough(inputUserOne);
-
     UUID idTwo = UUID.randomUUID();
     String nameTwo = "test_username_two";
     String passwordTwo = "password two";
@@ -55,10 +52,12 @@ public class PersistentDataStoreTest {
     User inputUserTwo = new User(idTwo, nameTwo, passwordTwo, creationTwo);
 
     // save
+    persistentDataStore.writeThrough(inputUserOne);
     persistentDataStore.writeThrough(inputUserTwo);
 
     // load
     List<User> resultUsers = persistentDataStore.loadUsers();
+
     // confirm that what we saved matches what we loaded
     User resultUserOne = resultUsers.get(0);
     Assert.assertEquals(idOne, resultUserOne.getId());
@@ -121,7 +120,7 @@ public class PersistentDataStoreTest {
     UUID idTwo = UUID.randomUUID();
     UUID conversationTwo = UUID.randomUUID();
     UUID authorTwo = UUID.randomUUID();
-    String contentTwo = "test content two";
+    String contentTwo = "test content one";
     Instant creationTwo = Instant.ofEpochMilli(2000);
     Message inputMessageTwo =
         new Message(idTwo, conversationTwo, authorTwo, contentTwo, creationTwo);

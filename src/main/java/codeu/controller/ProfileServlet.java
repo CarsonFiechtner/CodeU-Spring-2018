@@ -60,9 +60,7 @@ public class ProfileServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 
-    String username = (String) request.getParameter("value");
-    if(username == null || username == "")
-        username = (String) request.getSession().getAttribute("user");
+    String username = (String) request.getSession().getAttribute("user");
 
     if(username == null) {
       response.sendRedirect("/register");
@@ -73,7 +71,6 @@ public class ProfileServlet extends HttpServlet {
     if (user == null) {
       // if user is not found, send a 404 code
       response.sendError(HttpServletResponse.SC_NOT_FOUND);
-      return;
     }
 
     request.setAttribute(user.getName(), user);
@@ -91,9 +88,9 @@ public class ProfileServlet extends HttpServlet {
   private List<Message> getAuthorMessages(User user){
     List<Message> authorMessages = new ArrayList<>();
     List<Message> messages = messageStore.getMessages();
-    for(int i = messages.size()-1; i >= 0; i--){
-      if (messages.get(i).getAuthorId().equals(user.getId()))
-        authorMessages.add(messages.get(i));
+    for(Message message: messages){
+      if (message.getAuthorId().equals(user.getId()))
+        authorMessages.add(message);
     }  
     return authorMessages;
   }
@@ -108,10 +105,7 @@ public class ProfileServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 
-    String currentUser = (String) request.getParameter("value");
-    if(currentUser == null || currentUser == "")
-        currentUser = (String) request.getSession().getAttribute("user");
-
+    String currentUser = (String) request.getSession().getAttribute("user");
     if( currentUser == null || userStore.getUser(currentUser) == null){
       request.setAttribute("Error", "Please login correctly.");
       request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
@@ -121,7 +115,6 @@ public class ProfileServlet extends HttpServlet {
     User user = userStore.getUser(currentUser);
     String aboutMe = (String) request.getParameter("aboutMe");
     user.setAboutMe(aboutMe);
-    userStore.updateUser(user);
 
     response.sendRedirect("/profile");
   }

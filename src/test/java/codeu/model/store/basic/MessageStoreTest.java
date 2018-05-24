@@ -1,7 +1,6 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Message;
-import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -93,35 +92,6 @@ public class MessageStoreTest {
     assertEquals(messageStore.getNewestMessage(), inputMessage);
     assertEquals(inputMessage, resultMessage);
     Mockito.verify(mockPersistentStorageAgent).writeThrough(inputMessage);
-  }
-
-@Test
-  public void testRemoveUserMessages() {
-    User inputUser = new User(UUID.randomUUID(), "test_username", "password", Instant.now());
-    User inputUser2 = new User(UUID.randomUUID(), "test_username2", "password", Instant.now());
-    Message inputMessage =
-        new Message(
-            UUID.randomUUID(),
-            UUID.randomUUID(),
-	    inputUser.getId(),
-            "test message",
-            Instant.now());
-    Message inputMessage2 =
-        new Message(
-            UUID.randomUUID(),
-            UUID.randomUUID(),
-            inputUser2.getId(),
-            "test message",
-            Instant.now());
-
-    messageStore.addMessage(inputMessage);
-    messageStore.addMessage(inputMessage2);
-
-    messageStore.removeUserMessages(inputUser2);
-    List<Message> removedMessages = new ArrayList<>();
-    removedMessages.add(inputMessage2);
-    Assert.assertEquals(messageStore.getNumMessages(), 4);
-    Mockito.verify(mockPersistentStorageAgent).deleteThroughMessages(removedMessages);
   }
 
   private void assertEquals(Message expectedMessage, Message actualMessage) {
