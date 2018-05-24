@@ -60,6 +60,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
       <a href="/register">Register</a>
     <% } %>
     <a href="/about.jsp">About</a>
+    <a href="/testdata">Admin Page</a>
   
   </nav>
 
@@ -74,13 +75,16 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
       <ul>
     <%
       for (Message message : messages) {
+        if(UserStore.getInstance().getUser(message.getAuthorId()) != null){
         String author = UserStore.getInstance()
           .getUser(message.getAuthorId()).getName();
     %>
-      <li><strong><a href="/profile/<%= author %>"><%= author %></a>:</strong> <%= message.getContent() %></li>
+      <li><strong><a href="/profile/<%= author %>?value=<%= author %>" > <%= author %></a>:</strong> <%= message.getContent() %></li>
     <%
       }
+      }
     %>
+
       </ul>
     </div>
 

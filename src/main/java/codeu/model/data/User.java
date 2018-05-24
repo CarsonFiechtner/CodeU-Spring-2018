@@ -26,7 +26,6 @@ public class User {
   private final String hashedPassword;
   private final Instant creation;
   private String aboutMe;
-  
 
   /**
    * Constructs a new User.
@@ -75,6 +74,5 @@ public class User {
   public String getAboutMe(){
     return aboutMe;
   }
-
 
 }
