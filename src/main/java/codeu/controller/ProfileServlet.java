@@ -135,7 +135,7 @@ public class ProfileServlet extends HttpServlet {
     if (requestUrl!=null){
 	    aboutMe = requestUrl.substring("/profile/".length()).trim();
     }
-    System.out.println("DOPOST aboutMe: "+aboutMe);
+    System.out.println("DOPOST aboutMe: "+aboutMe+".");
     if(currentUser == null || currentUser == "")
         currentUser = (String) request.getSession().getAttribute("user");
 
