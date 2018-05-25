@@ -39,8 +39,9 @@ public class ProfileServlet extends HttpServlet {
 	private static final int MEMORY_THRESHOLD = 1024 * 1024 * 3; // 3MB
 	private static final int MAX_FILE_SIZE = 1024 * 1024 * 40; // 40MB
 	private static final int MAX_REQUEST_SIZE = 1024 * 1024 * 50; // 50MB
+	private static final String FILE_DOT_NAME = ".png";
 
-	/* ADD END *
+	
   /** Set up state for handling profile requests. */
   @Override
   public void init() throws ServletException {
@@ -92,17 +93,13 @@ public class ProfileServlet extends HttpServlet {
     }
 
     request.setAttribute(user.getName(), user);
-
-    String aboutMe = user.getAboutMe();
-    request.setAttribute("aboutMe", aboutMe);
-    String profilePic = request.getParameter("profilePic");// ADD
-    String message = request.getParameter("message");// ADD
+    System.out.println("DOGET user.getName() : "+user.getName());
+    System.out.println("DOGET user : "+user);
     
-    System.out.println("DOGET message : "+message);
-    request.setAttribute("message", message);
-	//request.setAttribute("profilePic", user.getProfilePic());// ADD
-	
-	//TODO show my photo
+    String aboutMe = user.getAboutMe();
+    System.out.println("DOGET aboutMe : "+aboutMe+".");
+    request.setAttribute("aboutMe", aboutMe);
+
     List<Message> authorMessages = getAuthorMessages(user);
     request.setAttribute("authorMessages", authorMessages);
     
@@ -130,8 +127,15 @@ public class ProfileServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-
+    String aboutMe ="";
+    String profilePic="";
     String currentUser = (String) request.getParameter("value");
+    String requestUrl = request.getRequestURI();
+    System.out.println("requestUrl====="+requestUrl);
+    if (requestUrl!=null){
+	    aboutMe = requestUrl.substring("/profile/".length()).trim();
+    }
+    System.out.println("DOPOST aboutMe: "+aboutMe);
     if(currentUser == null || currentUser == "")
         currentUser = (String) request.getSession().getAttribute("user");
 
@@ -142,16 +146,11 @@ public class ProfileServlet extends HttpServlet {
     }
 
     User user = userStore.getUser(currentUser);
-    String aboutMe = (String) request.getParameter("aboutMe");
     user.setAboutMe(aboutMe);
     userStore.updateUser(user);
+   	// update user profile
+	request.setAttribute("aboutMe", aboutMe);
     
-    /* ADD START */
-    String profilePic = request.getParameter("profilePic");// ADD
-	// update user profile
-	//user.updateUser(user.getPassword(), aboutMe, profilePic);// ADD
-	request.setAttribute("profilePic", profilePic);// ADD
-	//request.setAttribute("aboutMe", aboutMe);// ADD
 	// checks if the request actually contains upload file
 	if (!ServletFileUpload.isMultipartContent(request)) {
 		// if not, we stop here
@@ -162,7 +161,6 @@ public class ProfileServlet extends HttpServlet {
 		return;
 	}
 
-	System.out.println("upload start!!!!");
 	// configures upload settings
 	DiskFileItemFactory factory = new DiskFileItemFactory();
 	// sets memory threshold - beyond which files are stored in disk
@@ -187,25 +185,66 @@ public class ProfileServlet extends HttpServlet {
 	if (!uploadDir.exists()) {
 		uploadDir.mkdir();
 	}
-	//System.out.println("uploadPath:  " + uploadPath);
 	try {
 		// parses the request's content to extract file data
-		//@SuppressWarnings("unchecked")
 		List<FileItem> formItems = upload.parseRequest(request);
 
+		
 		if (formItems != null && formItems.size() > 0) {
 			// iterates over form's fields
 			for (FileItem item : formItems) {
+				 
+			    if(item.isFormField() ){
+			        if(item.getFieldName().equals("aboutMe")){
+			        	aboutMe=new String(item.getString().getBytes("ISO-8859-1"), "UTF-8") ;
+			        }
+			        if(item.getFieldName().equals("profilePic")){   
+			        	profilePic=item.getString();
+			        }
+			        user.setAboutMe(aboutMe);
+			        userStore.updateUser(user);
+			       // update user profile
+			    	request.setAttribute("profilePic", profilePic);
+			    	request.setAttribute("aboutMe", aboutMe);
+			        System.out.println("DOPOST aboutMe: "+aboutMe+".");
+			        System.out.println("DOPOST profilePic: "+profilePic);
+			    }
 				// processes only fields that are not form fields
 				if (!item.isFormField()) {
 					String fileName = new File(item.getName()).getName();
-					//String filePath = uploadPath + File.separator + fileName;
-					String filePath = uploadPath + File.separator + currentUser+".png";
-					File storeFile = new File(filePath);
-					System.out.println("filePath:  " + filePath);
-					// saves the file on disk
-					item.write(storeFile);
+					System.out.println("DOPOST INFO: fileName=  " + fileName);
+					
+					if (fileName==null || fileName=="") {
+						 response.sendRedirect("/profile");
+						 return;
+					}
+					String oldFilePath = uploadPath + File.separator + fileName;
+					//File oldFile = new File(oldFilePath);
+					String newFilePath = uploadPath + File.separator + currentUser+FILE_DOT_NAME;
+					File newFile = new File(newFilePath);
+					
+					System.out.println("DOPOST INFO: oldFilePath=  " + oldFilePath);
+					System.out.println("DOPOST INFO: newFilePath=  " + newFilePath);
+					if( newFile.exists()) {
+						try {
+						    newFile.delete();
+						    System.out.println("DOPOST INFO: new file is  deleted .... ");
+							
+						} catch (Exception ex) {
+							request.setAttribute("Error", "There was an error: " + ex.getMessage());
+							System.out.println("DOPOST Error: "+(String)request.getAttribute("Error"));
+							System.out.println("DOPOST INFO: file  exist ,delete failed ,Upload  Failed.... ");
+							response.sendRedirect("/profile");
+							return;
+						}
+
+					}
+					
+					// saves the old file on disk
+					item.write(newFile); 
 					request.setAttribute("message", "Upload has been done successfully!");
+					System.out.println("DOPOST INFO:  file is uploaded .... ");
+					
 				}
 			}
 		}
@@ -215,8 +254,8 @@ public class ProfileServlet extends HttpServlet {
 		response.sendRedirect("/profile");
 		return;
 	}
-	/* ADD END */
+
 	System.out.println("DOPOST message: "+(String)request.getAttribute("message"));
-    response.sendRedirect("/profile/"+currentUser);
+	response.sendRedirect("/profile");
   }
 }
