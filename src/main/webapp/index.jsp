@@ -13,7 +13,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
-<!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=UTF-8"  
+    pageEncoding="UTF-8"%> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">  
+
 <html>
 <head>
   <title>CodeU Chat App</title>
@@ -29,6 +32,7 @@
     <% if(request.getSession().getAttribute("user") != null){ %>
       <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
       <a href = "/logout">Logout</a>
+      <a href="/profile/<%= request.getSession().getAttribute("user") %>"><%= request.getSession().getAttribute("user") %>'s Profile</a>
     <% } else{ %>
       <a href="/login">Login</a>
       <a href="/register">Register</a>
@@ -54,6 +58,9 @@
             project.</li>
         <li>Check out the <a href="/testdata">admin page</a> to learn about site statistics and test out our conversations by loading your choice of test data!</li>
         <li>Don't forget to take a look at our user profile pages and create your own!</li>
+        <% if(request.getSession().getAttribute("user") != null){ %>
+        <li>Tired of chatting? <a href="/delete">Delete your account</a></li>
+        <% } %>
       </ul>
     </div>
   </div>
