@@ -15,6 +15,7 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Message;
+import codeu.model.data.User;
 import codeu.model.store.basic.UserStore;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
@@ -191,5 +192,21 @@ public class MessageStore {
   /** Sets the List of Messages stored by this MessageStore. */
   public void setMessages(List<Message> messages) {
     this.messages = messages;
+  }
+
+  /** Removes messages sent by a given User */
+  public void removeUserMessages(User user){
+    List<Message> removedMessages = new ArrayList<>();
+    for(int i = messages.size()-1; i >= 0; i--){
+        if(messages.get(i).getAuthorId().toString().equals(user.getId().toString())){
+	    removedMessages.add(messages.get(i));
+            messages.remove(i);
+        }
+    }
+    persistentStorageAgent.deleteThroughMessages(removedMessages);
+  }
+
+  public List<Message> getMessages(){
+    return messages;
   }
 }

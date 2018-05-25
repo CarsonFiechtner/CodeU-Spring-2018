@@ -158,6 +158,23 @@ public class UserStore {
     persistentStorageAgent.writeThrough(user);
   }
 
+  /** Update an existing user. */
+  public void updateUser(User user) {
+    persistentStorageAgent.writeThrough(user);
+  }
+
+  /** Remove an existing user. */
+  public void removeUser(User user) {
+    for(int i = 0; i < users.size(); i++){
+	if(users.get(i) == user){
+	    users.remove(i);
+	    break;
+	}
+    }
+    persistentStorageAgent.deleteThrough(user);
+  }
+
+
   /** Return true if the given username is known to the application. */
   public boolean isUserRegistered(String username) {
     for (User user : users) {
