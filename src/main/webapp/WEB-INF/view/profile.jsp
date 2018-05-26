@@ -69,21 +69,6 @@ String error = (String) request.getAttribute("Error");
 			<!-- action="/profile" -->
 		        <form id="form1"  method="POST" enctype="multipart/form-data">
 				<br />
-					<div class="Profile_img"> 
-				        <span>  Your profile picture</span> 
-			 	        		       
-				        <div class="Profile_addImg" id="Profile_addImg"> 
-				        <img id="myImg" src="/upload/<%= request.getSession().getAttribute("user") %>.png" alt="your image" 
-				         onError='this.src="https://i.pinimg.com/originals/75/63/41/756341768b70e9fe4e7a8f3e79f12e9b.jpg"' />
-			            </div>
-					</div>
-					<br />
-				     <div class="tip">
-						 <input id="fileupload" type="file" name="profilePic"
-						accept=".jpg, .jpeg, .png" "/>
-					</div> 					
-				
-					 <br />
 					<label for="aboutMe"></label>
 					<h3>
 					Edit your About Me (only you can see this)
@@ -120,20 +105,6 @@ String error = (String) request.getAttribute("Error");
 			
 	</div>
  <script language="javascript" type="text/javascript">
-	 $(function() {
-		$(":file").change(function() {
-			if (this.files && this.files[0]) {
-				var reader = new FileReader();
-				reader.onload = imageIsLoaded;
-				reader.readAsDataURL(this.files[0]);
-			}
-		});
-		
-	});
-	 
-	function imageIsLoaded(e) {
-		$('#myImg').attr('src', e.target.result);
-	}; 
 	function submitAction(url) {
 		  $('form').attr('action', url+$('#aboutMe').val());
 		  //alert(url+$('#aboutMe').val());
