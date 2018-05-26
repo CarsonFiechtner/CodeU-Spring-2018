@@ -22,7 +22,6 @@ function myFunction2() {
 }
 function myFunction3() {
     document.getElementById("confirm4").style.display="block";
-    document.getElementById("confirm5").style.display="block";
 }
 </script>
 <script src='https://www.google.com/recaptcha/api.js'></script>
@@ -70,8 +69,6 @@ function myFunction3() {
         <input type="text" name="confirmUsername" />
       </div>
 	</br>
-      <div id="confirm5" class="g-recaptcha" data-sitekey="6Lch1FoUAAAAABbP7DHTbXtfVN4VqkNrAZ1gnnQ6" style="display: none"></div>
-      </br>
       <button type="submit" value="confirm" name="confirm">Confirm</button>
       <button type="submit" value="cancel" name="cancel">Cancel</button>
     </form>
