@@ -52,8 +52,53 @@ h1 {
 
 input {
   font-size: 18px;
+  border-radius: 6px;
+    width: 19em;
+    height: 2em;
+    color: #1f2f6b;
 }
-
 button {
   font-size: 18px;
+    border-radius: 6px;
+    width: 6em;
+    height: 2em;
+    background-color: #5a73a5;
+    color: white;
+}
+
+.Profile_img{
+		    width: 34%;
+    background-color: #fff;
+    padding: 10px;
+    height: 260px;
+}
+.Profile_img>div{
+    width: 78px;
+    height: 78px;
+    border: 1px solid #ddd;
+    margin-top: 10px;
+    line-height: 78px;
+    text-align: center;
+}
+#Profile_addImg>img{
+	width: 200px;
+    height: 220px;
+    margin-left: 2px;
+}
+.msg{
+    font-size: 15px;
+     color: red;
+     padding-left: 5px;
+}
+.tip{
+    position: relative;
+    margin-top: 4px;
+           margin-left: 4px;
+}
+.tip>#file_input{
+    position: absolute;
+    top: 0;
+    left: -120px;
+    z-index: 3;
+    opacity: 0;
 }

@@ -52,16 +52,16 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
   <nav>
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
-      <% if (request.getSession().getAttribute("user") != null) { %>
-    <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
-    <a href="/profile/<%= request.getSession().getAttribute("user") %>"><%= request.getSession().getAttribute("user") %>'s Profile</a>  
-    <% } else { %>
+    <a href="/about.jsp">About</a>
+    <a href="/testdata">Admin Page</a>
+    <% if(request.getSession().getAttribute("user") != null){ %>
+      <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
+      <a href="/profile/<%= request.getSession().getAttribute("user") %>"><%= request.getSession().getAttribute("user") %>'s Profile</a>
+      <a href = "/logout">Logout</a>
+    <% } else{ %>
       <a href="/login">Login</a>
       <a href="/register">Register</a>
     <% } %>
-    <a href="/about.jsp">About</a>
-    <a href="/testdata">Admin Page</a>
-  
   </nav>
 
   <div id="container">

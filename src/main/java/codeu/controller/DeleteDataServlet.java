@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import codeu.controller.VerifyCaptcha;
+
 /** Servlet class responsible for loading test data. */
 public class DeleteDataServlet extends HttpServlet {
 
