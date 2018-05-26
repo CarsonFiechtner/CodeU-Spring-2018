@@ -30,8 +30,6 @@ public class VerifyCaptcha {
  
             // Add the Header informations to the Request to prepare send to the server.
             conn.setRequestMethod("POST");
-            conn.setRequestProperty("User-Agent", "Mozilla/5.0");
-            conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
  
             // Data will be sent to the server.
             String postParams = "secret=" + SECRET_KEY //
