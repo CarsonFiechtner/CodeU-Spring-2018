@@ -107,6 +107,21 @@ public class UserStoreTest {
   }
 
   @Test
+  public void testRemoveUser() {
+
+    User inputUser = new User(UUID.randomUUID(), "test_username", "password", Instant.now());
+    userStore.addUser(inputUser);
+
+    User resultUser = userStore.getUser("test_username");
+
+    userStore.removeUser(resultUser);
+
+    User finalUser = userStore.getUser("test_username");
+    Assert.assertEquals(finalUser, null);
+    Mockito.verify(mockPersistentStorageAgent).deleteThrough(resultUser);
+  }
+
+  @Test
   public void testIsUserRegistered_true() {
     Assert.assertTrue(userStore.isUserRegistered(USER_ONE.getName()));
   }

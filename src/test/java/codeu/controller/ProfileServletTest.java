@@ -102,7 +102,7 @@ public class ProfileServletTest {
 
     profileServlet.doPost(mockRequest, mockResponse);
 
-    //Mockito.verify(mockUser).setAboutMe("test aboutMe");
+    Mockito.verify(mockUser).setAboutMe("test aboutMe");
 
     Mockito.verify(mockResponse).sendRedirect("/profile");
 

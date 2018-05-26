@@ -6,6 +6,7 @@
 <%@ page import="java.time.Instant"%>
 <%@ page import="java.util.Date"%>
 <%@ page import="java.text.SimpleDateFormat"%>
+<%@ page import="java.time.format.DateTimeFormatter"%>
 <%
 String error = (String) request.getAttribute("Error");
 		  	  
@@ -38,6 +39,7 @@ String error = (String) request.getAttribute("Error");
 		<a href="/login">Login</a> <a href="/register">Register</a>
 		<% } %>
 		<a href="/about.jsp">About</a>
+		<a href="/testdata">Admin Page</a>
 
   </nav>
 	<div id="container">

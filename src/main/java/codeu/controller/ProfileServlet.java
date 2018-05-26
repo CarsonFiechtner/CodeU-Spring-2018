@@ -5,7 +5,6 @@ import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.store.basic.UserStore;
 import codeu.model.store.basic.MessageStore;
-
 import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
@@ -41,7 +40,6 @@ public class ProfileServlet extends HttpServlet {
 	private static final int MAX_REQUEST_SIZE = 1024 * 1024 * 50; // 50MB
 	private static final String FILE_DOT_NAME = ".png";
 
-	
   /** Set up state for handling profile requests. */
   @Override
   public void init() throws ServletException {
@@ -102,8 +100,7 @@ public class ProfileServlet extends HttpServlet {
 
     List<Message> authorMessages = getAuthorMessages(user);
     request.setAttribute("authorMessages", authorMessages);
-    
-
+  
     request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
   }
 

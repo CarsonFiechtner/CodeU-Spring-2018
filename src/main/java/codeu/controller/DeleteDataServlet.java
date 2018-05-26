@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/** Some code modified from https://o7planning.org/en/10397/using-google-recaptcha-with-java-web-application */
+
 package codeu.controller;
 
 import codeu.model.store.basic.ConversationStore;
@@ -27,6 +29,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import codeu.controller.VerifyCaptcha;
 
 /** Servlet class responsible for loading test data. */
 public class DeleteDataServlet extends HttpServlet {
@@ -97,13 +100,17 @@ public class DeleteDataServlet extends HttpServlet {
 	confirms[3] = request.getParameter("confirm3");
     boolean confirmed = true;
     for(int i = 0; i < 4; i++){
-	if(!confirms[i].contains("confirm")){
+	if(confirms[i] == null || !confirms[i].contains("confirm")){
     	    confirmed = false;
 	}
     }
-        String username = (String) request.getSession().getAttribute("user");
-    if(!request.getParameter("confirmUsername").equals(username)){
+    String username = (String) request.getSession().getAttribute("user");
+    if(confirmed && request.getParameter("confirmUsername") != null && !request.getParameter("confirmUsername").equals(username)){
 	confirmed = false;
+    }
+    if(confirmed && !confirms[0].equals("confirmTesting")){
+      String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
+      confirmed = VerifyCaptcha.verify(gRecaptchaResponse);
     }
     if(confirmed){
         User user = userStore.getUser(username);
