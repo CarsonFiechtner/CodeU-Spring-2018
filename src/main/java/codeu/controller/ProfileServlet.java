@@ -131,6 +131,7 @@ public class ProfileServlet extends HttpServlet {
     System.out.println("requestUrl====="+requestUrl);
     if (requestUrl!=null){
 	    aboutMe = requestUrl.substring("/profile/".length()).trim();
+	    aboutMe = aboutMe.replace("%20", " ");
     }
     System.out.println("DOPOST aboutMe: "+aboutMe+".");
     if(currentUser == null || currentUser == "")
@@ -145,114 +146,6 @@ public class ProfileServlet extends HttpServlet {
     User user = userStore.getUser(currentUser);
     user.setAboutMe(aboutMe);
     userStore.updateUser(user);
-   	// update user profile
-	request.setAttribute("aboutMe", aboutMe);
-    
-	// checks if the request actually contains upload file
-	if (!ServletFileUpload.isMultipartContent(request)) {
-		// if not, we stop here
-		request.setAttribute("Error", "Error: Form must has enctype=multipart/form-data.");
-		System.out.println("DOPOST Error: "+(String)request.getAttribute("Error"));
-		
-		response.sendRedirect("/profile");
-		return;
-	}
-
-	// configures upload settings
-	DiskFileItemFactory factory = new DiskFileItemFactory();
-	// sets memory threshold - beyond which files are stored in disk
-	factory.setSizeThreshold(MEMORY_THRESHOLD);
-	// sets temporary location to store files
-	factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
-
-	ServletFileUpload upload = new ServletFileUpload(factory);
-
-	// sets maximum size of upload file
-	upload.setFileSizeMax(MAX_FILE_SIZE);
-
-	// sets maximum size of request (include file + form data)
-	upload.setSizeMax(MAX_REQUEST_SIZE);
-
-	// constructs the directory path to store upload file
-	// this path is relative to application's directory
-	String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIRECTORY;
-
-	// creates the directory if it does not exist
-	File uploadDir = new File(uploadPath);
-	if (!uploadDir.exists()) {
-		uploadDir.mkdir();
-	}
-	try {
-		// parses the request's content to extract file data
-		List<FileItem> formItems = upload.parseRequest(request);
-
-		
-		if (formItems != null && formItems.size() > 0) {
-			// iterates over form's fields
-			for (FileItem item : formItems) {
-				 
-			    if(item.isFormField() ){
-			        if(item.getFieldName().equals("aboutMe")){
-			        	aboutMe=new String(item.getString().getBytes("ISO-8859-1"), "UTF-8") ;
-			        }
-			        if(item.getFieldName().equals("profilePic")){   
-			        	profilePic=item.getString();
-			        }
-			        user.setAboutMe(aboutMe);
-			        userStore.updateUser(user);
-			       // update user profile
-			    	request.setAttribute("profilePic", profilePic);
-			    	request.setAttribute("aboutMe", aboutMe);
-			        System.out.println("DOPOST aboutMe: "+aboutMe+".");
-			        System.out.println("DOPOST profilePic: "+profilePic);
-			    }
-				// processes only fields that are not form fields
-				if (!item.isFormField()) {
-					String fileName = new File(item.getName()).getName();
-					System.out.println("DOPOST INFO: fileName=  " + fileName);
-					
-					if (fileName==null || fileName=="") {
-						 response.sendRedirect("/profile");
-						 return;
-					}
-					String oldFilePath = uploadPath + File.separator + fileName;
-					//File oldFile = new File(oldFilePath);
-					String newFilePath = uploadPath + File.separator + currentUser+FILE_DOT_NAME;
-					File newFile = new File(newFilePath);
-					
-					System.out.println("DOPOST INFO: oldFilePath=  " + oldFilePath);
-					System.out.println("DOPOST INFO: newFilePath=  " + newFilePath);
-					if( newFile.exists()) {
-						try {
-						    newFile.delete();
-						    System.out.println("DOPOST INFO: new file is  deleted .... ");
-							
-						} catch (Exception ex) {
-							request.setAttribute("Error", "There was an error: " + ex.getMessage());
-							System.out.println("DOPOST Error: "+(String)request.getAttribute("Error"));
-							System.out.println("DOPOST INFO: file  exist ,delete failed ,Upload  Failed.... ");
-							response.sendRedirect("/profile");
-							return;
-						}
-
-					}
-					
-					// saves the old file on disk
-					item.write(newFile); 
-					request.setAttribute("message", "Upload has been done successfully!");
-					System.out.println("DOPOST INFO:  file is uploaded .... ");
-					
-				}
-			}
-		}
-	} catch (Exception ex) {
-		request.setAttribute("Error", "There was an error: " + ex.getMessage());
-		System.out.println("DOPOST Error: "+(String)request.getAttribute("Error"));
-		response.sendRedirect("/profile");
-		return;
-	}
-
-	System.out.println("DOPOST message: "+(String)request.getAttribute("message"));
-	response.sendRedirect("/profile");
+    response.sendRedirect("/profile");
   }
 }
