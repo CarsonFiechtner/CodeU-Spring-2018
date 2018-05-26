@@ -22,7 +22,7 @@ String error = (String) request.getAttribute("Error");
 <title>Profile</title>
 <link rel="stylesheet" href="/css/main.css">
 <script type="text/javascript"
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 
 </head>
 <body  ">
